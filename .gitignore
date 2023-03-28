@@ -1,0 +1,38 @@
+# Carpeta bin y obj
+bin/
+obj/
+
+# Archivos de caché y temporales
+*.cache
+*.log
+*.pidb
+*.user
+*.tmp
+*.dbmdl
+
+# Archivos de configuración local
+*.config
+*.config.user
+Web.config
+Web.*.config
+
+# Archivos de respaldo de Visual Studio
+*.bak
+*.bak.*
+*.csproj.*
+*.dbml.*
+*.orig
+*.user
+*.vspscc
+*.vssscc
+*.resharper
+_ReSharper.*
+
+# Carpeta de archivos de respaldo
+Backup*/
+
+#configuracion de visual studio code para el proyecto
+.vscode
+
+#Mis variables de entorno
+.env
