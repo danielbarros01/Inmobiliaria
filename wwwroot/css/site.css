@@ -15,8 +15,14 @@ html {
 html {
   position: relative;
   min-height: 100%;
+  color: white;
 }
 
 body {
   margin-bottom: 60px;
+  background-image: radial-gradient(var(--color-principal-fondo), var(--color-secundario-fondo));
+}
+
+.options{
+  height: 300px;
 }
