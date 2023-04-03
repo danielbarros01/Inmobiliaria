@@ -24,7 +24,7 @@ public class RepositorioInquilino
                 {
                     while (reader.Read())
                     {
-                        Inquilino propietario = new Inquilino
+                        Inquilino inquilino = new Inquilino
                         {
                             Id = reader.GetInt32(nameof(Inquilino.Id)),//Me da el id
                             Dni = reader.GetInt32(nameof(Inquilino.Dni)),//Es equivalente a reader.GetString(nameof("Dni"))
@@ -34,7 +34,7 @@ public class RepositorioInquilino
                             Telefono = reader.GetString(nameof(Inquilino.Telefono))
                         };
 
-                        list.Add(propietario);
+                        list.Add(inquilino);
                     }
                 }
                 conn.Close();
