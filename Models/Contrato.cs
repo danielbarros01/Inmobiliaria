@@ -16,10 +16,8 @@ namespace Inmobiliaria.Models
         public string Condiciones { get; set; }
         public Decimal Monto { get; set; }
 
-        /* Hace falta? */
         public int InmuebleId { get; set;}
         public int InquilinoId { get; set;}
-        /* ---------- */
 
         //[ForeignKey("inmueble_Id")]
         public Inmueble Inmueble { get; set; }
