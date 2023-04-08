@@ -12,4 +12,8 @@ public class Inquilino
 
     public Inquilino() { }
 
+    public string ToString()
+    {
+        return this.Nombre + " " + this.Apellido;
+    }
 }

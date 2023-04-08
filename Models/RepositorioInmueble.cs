@@ -32,6 +32,8 @@ public class RepositorioInmueble
                 connection.Open();
 
                 res = Convert.ToInt32(command.ExecuteScalar());
+                i.Id = res;
+
                 connection.Close();
             }
         }
@@ -45,7 +47,7 @@ public class RepositorioInmueble
         using (var connection = new MySqlConnection(connectionString))
         {
             string query = @"
-            SELECT i.Id, i.Direccion, i.Uso, i.Cantidad_ambientes, i.Coordenadas, i.Precio, i.Disponible, i.propietario_id, p.nombre, p.Apellido, t.Tipo
+            SELECT i.Id, i.Direccion, i.Uso, i.Cantidad_ambientes, i.Coordenadas, i.Precio, i.Disponible, i.propietario_Id, p.nombre, p.Apellido, t.Tipo
             FROM inmuebles i
             INNER JOIN propietarios p ON i.propietario_id = p.Id
             INNER JOIN tipos_inmueble t ON i.tipo_inmueble_Id = t.Id;";
@@ -66,9 +68,9 @@ public class RepositorioInmueble
                             Coordenadas = reader.GetString(nameof(Inmueble.Coordenadas)),
                             Precio = reader.GetDecimal(nameof(Inmueble.Precio)),
                             Disponible = reader.GetBoolean(nameof(Inmueble.Disponible)),
+                            PropietarioId = reader.GetInt32("propietario_Id"),
                             Propietario = new Propietario
                             {
-                                Id = reader.GetInt32(nameof(Inmueble.Propietario.Id)),/* No devuelve el verdadero Id */
                                 Nombre = reader.GetString(nameof(Inmueble.Propietario.Nombre)),
                                 Apellido = reader.GetString(nameof(Inmueble.Propietario.Apellido))
                             },
@@ -96,7 +98,7 @@ public class RepositorioInmueble
         using (var conn = new MySqlConnection(connectionString))
         {
             var query = @"
-            SELECT i.Id, i.Direccion, i.Uso, i.Cantidad_ambientes, i.Coordenadas, i.Precio, i.Disponible, p.Id, p.nombre, p.Apellido,p.Telefono, t.Tipo
+            SELECT i.Id, i.Direccion, i.Uso, i.Cantidad_ambientes, i.Coordenadas, i.Precio, i.Disponible, i.propietario_Id, p.nombre, p.Apellido,p.Telefono, t.Tipo
             FROM inmuebles i
             INNER JOIN propietarios p ON i.propietario_id = p.Id
             INNER JOIN tipos_inmueble t ON i.tipo_inmueble_Id = t.Id
@@ -119,9 +121,9 @@ public class RepositorioInmueble
                             Coordenadas = reader.GetString(nameof(Inmueble.Coordenadas)),
                             Precio = reader.GetDecimal(nameof(Inmueble.Precio)),
                             Disponible = reader.GetBoolean(nameof(Inmueble.Disponible)),
+                            PropietarioId = reader.GetInt32("propietario_Id"),
                             Propietario = new Propietario
                             {
-                                Id = reader.GetInt32(nameof(Inmueble.Propietario.Id)),/* NO DEVUELVE EL VERDADERO ID, ASIGNA 1 */
                                 Nombre = reader.GetString(nameof(Inmueble.Propietario.Nombre)),
                                 Apellido = reader.GetString(nameof(Inmueble.Propietario.Apellido)),
                                 Telefono = reader.GetString(nameof(Inmueble.Propietario.Telefono))

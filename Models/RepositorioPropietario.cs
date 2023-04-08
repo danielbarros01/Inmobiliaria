@@ -60,6 +60,7 @@ public class RepositorioPropietario
                 command.Parameters.AddWithValue("@email", p.Email);
                 conn.Open();
                 res = Convert.ToInt32(command.ExecuteScalar()); // devuelve el valor de la última fila insertada en la tabla. Este valor se convierte a un entero y se asigna a la variable res.
+                p.Id = res;
                 conn.Close();
             }
         }

@@ -22,6 +22,7 @@ namespace Inmobiliaria.Controllers
         public ActionResult Index()
         {
             var list = Repo.GetTipos();
+            ViewBag.Mensaje = TempData["Mensaje"];
             return View(list);
         }
 
@@ -30,6 +31,31 @@ namespace Inmobiliaria.Controllers
         {
             var tipo = Repo.GetTipo(id);
             return View(tipo);
+        }
+
+        // GET: TipoInmueble/Edit/5
+        public ActionResult Edit(int id)
+        {
+            var tipoInmueble = Repo.GetTipo(id);
+            return View(tipoInmueble);
+        }
+
+        // POST: TipoInmueble/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit(int id, TipoInmueble t)
+        {
+            try
+            {
+                Repo.Modificar(t);
+                TempData["Mensaje"] =  $"Tipo de Inmueble {t.Tipo} modificado!";
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception e)
+            {
+                throw;
+                return View();
+            }
         }
 
         // GET: TipoInmueble/Create
@@ -46,7 +72,7 @@ namespace Inmobiliaria.Controllers
             try
             {
                 Repo.Alta(tipo);
-
+                TempData["Mensaje"] =  $"Tipo de Inmueble {tipo} creado!";
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -69,12 +95,13 @@ namespace Inmobiliaria.Controllers
         // POST: TipoInmueble/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Delete(int id, TipoInmueble t)
         {
             try
             {
                 // TODO: Add delete logic here
                 Repo.Eliminar(id);
+                TempData["Mensaje"] =  $"Tipo de Inmueble {t.Tipo} eliminado!";
                 return RedirectToAction(nameof(Index));
             }
             catch

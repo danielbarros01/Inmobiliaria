@@ -32,14 +32,32 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Inmuebles">Inmuebles</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="TipoInmueble">Tipos de Inmueble</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Contratos">Contratos</a>
                         </li>
                     </ul>
                 </div>
             </div>
         </nav>
     </header>
+
+    @*  *@
+
     <div class="container">
+        <div class="">
+            @if (ViewBag.Mensaje != null)
+            {//alta exitosa
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <strong>¡Éxito!</strong> @ViewBag.Mensaje
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true"></span>
+                    </button>
+                </div>
+            }
+            <div class="m-1 p-1">
+                @RenderBody()
+            </div>
+        </div>
+
         <main role="main" class="pb-3">
             @RenderBody()
         </main>

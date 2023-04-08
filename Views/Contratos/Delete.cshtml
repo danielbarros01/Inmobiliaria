@@ -1,4 +1,4 @@
-@model Inmobiliaria.Models.Inmueble
+@model Inmobiliaria.Models.Contrato
 
 @{
     ViewData["Title"] = "Delete";
@@ -6,9 +6,9 @@
 
 <h1>Eliminar</h1>
 
-<h3>Esta seguro que desea eliminar?</h3>
+<h3>Esta seguro de querer eliminar?</h3>
 <div>
-    <h4>Inmueble</h4>
+    <h4>Contrato</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
@@ -18,46 +18,40 @@
             @Html.DisplayFor(model => model.Id)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Tipo)
+            @Html.DisplayNameFor(model => model.Desde)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Tipo.Tipo)
+            @Html.DisplayFor(model => model.Desde)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Direccion)
+            @Html.DisplayNameFor(model => model.Hasta)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Direccion)
+            @Html.DisplayFor(model => model.Hasta)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Uso)
+            @Html.DisplayNameFor(model => model.Condiciones)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Uso)
+            @Html.DisplayFor(model => model.Condiciones)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Cantidad_ambientes)
+            @Html.DisplayNameFor(model => model.Monto)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Cantidad_ambientes)
+            @Html.DisplayFor(model => model.Monto)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Coordenadas)
+            Inmueble
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Coordenadas)
+             @Model.Inmueble.ToString()
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Precio)
+            Inquilino
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Precio)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Disponible)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Disponible)
+            @Model.Inquilino.ToString()
         </dd>
     </dl>
     

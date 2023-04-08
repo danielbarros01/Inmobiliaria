@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Inmobiliaria.Models
 {
@@ -15,7 +16,16 @@ namespace Inmobiliaria.Models
         public string Coordenadas { get; set; }
         public decimal Precio { get; set; }
         public bool Disponible { get; set; }
+        public int PropietarioId { get; set; }
+
+        [ForeignKey(nameof(PropietarioId))]
         public Propietario Propietario { get; set; }
+
         public TipoInmueble Tipo { get; set; }
+
+        public string ToString()
+        {
+            return $"{this.Tipo.Tipo} en {this.Direccion}";
+        }
     }
 }

@@ -43,7 +43,7 @@ public class RepositorioInquilino
         return list;
     }
 
-    public int Alta(Inquilino p)
+    public int Alta(Inquilino i)
     {
         int res = 0;
         using (var conn = new MySqlConnection(connectionString))
@@ -53,13 +53,14 @@ public class RepositorioInquilino
                                 SELECT LAST_INSERT_ID();";
             using (var command = new MySqlCommand(query, conn))
             {
-                command.Parameters.AddWithValue("@dni", p.Dni);
-                command.Parameters.AddWithValue("@nombre", p.Nombre);
-                command.Parameters.AddWithValue("@apellido", p.Apellido);
-                command.Parameters.AddWithValue("@telefono", p.Telefono);
-                command.Parameters.AddWithValue("@email", p.Email);
+                command.Parameters.AddWithValue("@dni", i.Dni);
+                command.Parameters.AddWithValue("@nombre", i.Nombre);
+                command.Parameters.AddWithValue("@apellido", i.Apellido);
+                command.Parameters.AddWithValue("@telefono", i.Telefono);
+                command.Parameters.AddWithValue("@email", i.Email);
                 conn.Open();
                 res = Convert.ToInt32(command.ExecuteScalar()); // devuelve el valor de la última fila insertada en la tabla. Este valor se convierte a un entero y se asigna a la variable res.
+                i.Id = res;
                 conn.Close();
             }
         }

@@ -86,7 +86,23 @@ public class RepositorioTipoInmueble
                 conn.Close();
             }
         }
-        Console.WriteLine(@"en alta"+tipoInmb);
+        return res;
+    }
+
+    public int Modificar(TipoInmueble tipoInmueble){
+        int res = 0;
+
+        using (var conn = new MySqlConnection(connectionString)){
+            string query = @"UPDATE tipos_inmueble SET Tipo=@tipo WHERE Id = @id";
+
+            using (var command = new MySqlCommand(query, conn)){
+                command.Parameters.AddWithValue("@tipo", tipoInmueble.Tipo);
+                command.Parameters.AddWithValue("@id", tipoInmueble.Id);
+                conn.Open();
+                res = command.ExecuteNonQuery();
+                conn.Close();
+            }
+        }
         return res;
     }
 
@@ -106,4 +122,7 @@ public class RepositorioTipoInmueble
         }
         return res;
     }
+
+
+
 }

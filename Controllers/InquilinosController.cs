@@ -23,6 +23,8 @@ namespace Inmobiliaria.Controllers
         public ActionResult Index()
         {
             var listaInquilinos = Repo.GetInquilinos();
+            ViewBag.Mensaje = TempData["Mensaje"];
+
             return View(listaInquilinos);
         }
 
@@ -47,6 +49,7 @@ namespace Inmobiliaria.Controllers
             try
             {
                 Repo.Alta(inquilino);
+                TempData["Mensaje"] =  $"Inquilino {inquilino.Nombre} {inquilino.Apellido} con ID {inquilino.Id} creado!";
 
                 return RedirectToAction(nameof(Index));
             }
@@ -71,6 +74,7 @@ namespace Inmobiliaria.Controllers
             try
             {
                 Repo.Modificar(inquilino);
+                TempData["Mensaje"] =  $"Inquilino {inquilino.Nombre} {inquilino.Apellido} con ID {inquilino.Id} modificado!";
 
                 return RedirectToAction(nameof(Index));
             }
@@ -90,11 +94,12 @@ namespace Inmobiliaria.Controllers
         // POST: Inquilinos/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Delete(int id, Inquilino i)
         {
             try
             {
                 Repo.Eliminar(id);
+                TempData["Mensaje"] =  $"Inquilino {i.Nombre} {i.Apellido} con ID {i.Id} eliminado!";
 
                 return RedirectToAction(nameof(Index));
             }

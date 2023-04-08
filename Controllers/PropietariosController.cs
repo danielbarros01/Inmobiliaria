@@ -22,6 +22,8 @@ namespace Inmobiliaria.Controllers
         public ActionResult Index()
         {
             var lista = Repo.GetPropietarios();
+            ViewBag.Mensaje = TempData["Mensaje"];
+            //Tempdata es para pasar datos entre acciones
 
             return View(lista);
         }
@@ -48,6 +50,7 @@ namespace Inmobiliaria.Controllers
             {
                 Repo.Alta(propietario);
 
+                TempData["Mensaje"] =  $"Propietario {propietario.Nombre} {propietario.Apellido} con ID {propietario.Id} cargado con exito!";
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -60,6 +63,7 @@ namespace Inmobiliaria.Controllers
         public ActionResult Edit(int id)
         {
             var propietario = Repo.GetPropietario(id);
+            
             return View(propietario);
         }
 
@@ -71,12 +75,12 @@ namespace Inmobiliaria.Controllers
             try
             {
                 Repo.Modificar(p);
+                TempData["Mensaje"] =  $"Propietario {p.Nombre} {p.Apellido} con ID {p.Id} modificado correctamente!";
 
                 return RedirectToAction(nameof(Index));
             }
-            catch (Exception e)
+            catch(Exception e)
             {
-                throw;
                 return View();
             }
         }
@@ -85,17 +89,19 @@ namespace Inmobiliaria.Controllers
         public ActionResult Delete(int id)
         {
             var propietario = Repo.GetPropietario(id);
+            
             return View(propietario);
         }
 
         // POST: Propietarios/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Delete(int id, Propietario p)
         {
             try
             {
                 Repo.Eliminar(id);
+                TempData["Mensaje"] =  $"Propietario con ID {p.Id} eliminado!";
 
                 return RedirectToAction(nameof(Index));
             }

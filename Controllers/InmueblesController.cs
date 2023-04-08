@@ -25,6 +25,8 @@ namespace Inmobiliaria.Controllers
         public ActionResult Index()
         {
             var lista = Repo.GetInmuebles();
+            ViewBag.Mensaje = TempData["Mensaje"];
+
             return View(lista);
         }
 
@@ -52,6 +54,8 @@ namespace Inmobiliaria.Controllers
             {
                 // TODO: Add insert logic here
                 Repo.Alta(inmueble);
+                TempData["Mensaje"] =  $"Inmueble con direccion {inmueble.Direccion} y ID {inmueble.Id} creado!";
+
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -78,6 +82,7 @@ namespace Inmobiliaria.Controllers
             try
             {        
                 Repo.Modificar(inmueble);
+                TempData["Mensaje"] =  $"Inmueble con {inmueble.Direccion} y ID {inmueble.Id} modificado!";
 
                 return RedirectToAction(nameof(Index));
             }
@@ -97,11 +102,12 @@ namespace Inmobiliaria.Controllers
         // POST: Inmuebles/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Delete(int id, Inmueble inmueble)
         {
             try
             {
                 Repo.Eliminar(id);
+                TempData["Mensaje"] =  $"Inmueble con direccion {inmueble.Direccion} con ID {inmueble.Id} eliminado!";
 
                 return RedirectToAction(nameof(Index));
             }
