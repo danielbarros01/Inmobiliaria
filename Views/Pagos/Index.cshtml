@@ -1,0 +1,47 @@
+@model IEnumerable<Inmobiliaria.Models.Pago>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Pagos</h1>
+
+<p>
+    <a asp-action="Create">Crear</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.NumeroPago)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Fecha)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Contrato)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.NumeroPago)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Fecha)
+            </td>
+            <td>
+                @item.Contrato.ToString()
+            </td>
+            <td>
+                @Html.ActionLink("Editar", "Edit", new { idPago = item.NumeroPago, idContrato = item.ContratoId}) |
+                @Html.ActionLink("Detalles", "Details", new { idPago = item.NumeroPago, idContrato = item.ContratoId}) |
+                @Html.ActionLink("Eliminar", "Delete", new { idPago = item.NumeroPago, idContrato = item.ContratoId})
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

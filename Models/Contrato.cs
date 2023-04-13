@@ -16,17 +16,23 @@ namespace Inmobiliaria.Models
         public string Condiciones { get; set; }
         public Decimal Monto { get; set; }
 
-        public int InmuebleId { get; set;}
-        public int InquilinoId { get; set;}
+        public int InmuebleId { get; set; }
+        public int InquilinoId { get; set; }
 
         //[ForeignKey("inmueble_Id")]
         public Inmueble Inmueble { get; set; }
 
         //[ForeignKey("inquilino_Id")]
-        public Inquilino Inquilino {get; set;}
+        public Inquilino Inquilino { get; set; }
 
 
-        public string ParsearFecha(DateTime fecha){
+        public string ToString()
+        {
+            return $"Contrato Nº{Id} del inquilno {Inquilino.ToString()} con {Inmueble.ToString()}";
+        }
+
+        public string ParsearFecha(DateTime fecha)
+        {
             string fechaFormateada = fecha.ToString("dd/MM/yyyy");
             return fechaFormateada;
         }

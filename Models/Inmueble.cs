@@ -18,7 +18,7 @@ namespace Inmobiliaria.Models
         public bool Disponible { get; set; }
         public int PropietarioId { get; set; }
 
-        [ForeignKey(nameof(PropietarioId))]
+        //[ForeignKey(nameof(PropietarioId))] mal?
         public Propietario Propietario { get; set; }
 
         public TipoInmueble Tipo { get; set; }

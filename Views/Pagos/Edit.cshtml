@@ -1,0 +1,41 @@
+@model Inmobiliaria.Models.Pago
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Pago</h4>
+<hr />
+
+<div class="row">
+    <div class="col-md-5">
+        <div class="form-group">
+            <label class="control-label">Numero Pago</label>
+            <input value="@Model.NumeroPago" class="form-control" disabled/>
+        </div>
+        <div class="form-group">
+            <label class="control-label"></label>
+            <input type="text" value="@Model.Contrato.ToString()" class="form-control" disabled> 
+        </div>
+
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Fecha" class="control-label"></label>
+                <input asp-for="Fecha" class="form-control" type="datetime-local" id="fecha-input" />
+                <span asp-validation-for="Fecha" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Guardar" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Volver</a>
+</div>
+
+<script src="~/js/EditPago.js" type="module"></script>
