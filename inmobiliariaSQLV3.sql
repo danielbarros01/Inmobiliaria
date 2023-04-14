@@ -115,6 +115,33 @@ INSERT INTO `inquilinos` VALUES (4,'88996554','Viedo','Elmiro','Elimir@hotmail.c
 UNLOCK TABLES;
 
 --
+-- Table structure for table `pagos`
+--
+
+DROP TABLE IF EXISTS `pagos`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `pagos` (
+  `NumeroPago` int NOT NULL,
+  `Fecha` datetime NOT NULL,
+  `contrato_Id` int NOT NULL,
+  PRIMARY KEY (`NumeroPago`,`contrato_Id`),
+  KEY `fk_pagos_contratos1_idx` (`contrato_Id`),
+  CONSTRAINT `fk_pagos_contratos1` FOREIGN KEY (`contrato_Id`) REFERENCES `contratos` (`Id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `pagos`
+--
+
+LOCK TABLES `pagos` WRITE;
+/*!40000 ALTER TABLE `pagos` DISABLE KEYS */;
+INSERT INTO `pagos` VALUES (1,'2023-04-13 00:00:00',16),(1,'2023-04-13 17:57:00',19),(2,'2023-04-13 00:00:00',16);
+/*!40000 ALTER TABLE `pagos` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `propietarios`
 --
 
@@ -139,7 +166,7 @@ CREATE TABLE `propietarios` (
 
 LOCK TABLES `propietarios` WRITE;
 /*!40000 ALTER TABLE `propietarios` DISABLE KEYS */;
-INSERT INTO `propietarios` VALUES (6,'665521','Padre','Lucas','padrelucas@outlook.com','665588777'),(7,'88999774','Ernesto','Rothbard','erobard@hotmail.com','2321321231'),(8,'55555552','dasdsa','Barros','danibelgranocab15@gmail.com','3544562721');
+INSERT INTO `propietarios` VALUES (6,'665521','Padre','Lucas','padrelucas@outlook.com','665588777'),(7,'88999774','Ernesto','Rothbard','erobard@hotmail.com','2321321231'),(8,'55555552','Alberto','Barros','danibelgranocab15@gmail.com','3544562721');
 /*!40000 ALTER TABLE `propietarios` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -167,6 +194,36 @@ LOCK TABLES `tipos_inmueble` WRITE;
 INSERT INTO `tipos_inmueble` VALUES (2,'Casa'),(1,'Departamento'),(8,'Monoambiente');
 /*!40000 ALTER TABLE `tipos_inmueble` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `usuarios`
+--
+
+DROP TABLE IF EXISTS `usuarios`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `usuarios` (
+  `Id` int NOT NULL AUTO_INCREMENT,
+  `Rol` int NOT NULL,
+  `Email` varchar(45) NOT NULL,
+  `Nombre` varchar(45) NOT NULL,
+  `Apellido` varchar(45) NOT NULL,
+  `Clave` varchar(45) NOT NULL,
+  `AvatarRuta` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`Id`),
+  UNIQUE KEY `Email_UNIQUE` (`Email`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `usuarios`
+--
+
+LOCK TABLES `usuarios` WRITE;
+/*!40000 ALTER TABLE `usuarios` DISABLE KEYS */;
+INSERT INTO `usuarios` VALUES (5,2,'dani15@gmail.com','Daniel','Barros','jqHmR/6TBx1wnbguKZWq7l5herWtJ9epvjB5B9tNOiY=','/uploads\\avatar_5.jpg'),(7,1,'juli15@gmail.com','Juli','Veliz','jqHmR/6TBx1wnbguKZWq7l5herWtJ9epvjB5B9tNOiY=','/uploads\\avatar_7.jpg');
+/*!40000 ALTER TABLE `usuarios` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -177,4 +234,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-04-08 18:48:27
+-- Dump completed on 2023-04-14 12:35:17

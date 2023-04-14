@@ -7,7 +7,7 @@
 <h1>Pagos</h1>
 
 <p>
-    <a asp-action="Create">Crear</a>
+    <a asp-action="Create"><i class="fa-solid fa-square-plus"></i></a>
 </p>
 <table class="table">
     <thead>
@@ -36,11 +36,16 @@
             <td>
                 @item.Contrato.ToString()
             </td>
+            
             <td>
-                @Html.ActionLink("Editar", "Edit", new { idPago = item.NumeroPago, idContrato = item.ContratoId}) |
-                @Html.ActionLink("Detalles", "Details", new { idPago = item.NumeroPago, idContrato = item.ContratoId}) |
-                @Html.ActionLink("Eliminar", "Delete", new { idPago = item.NumeroPago, idContrato = item.ContratoId})
+                @Html.ActionLink("", "Edit", new { idPago = item.NumeroPago, idContrato = item.ContratoId}, new {@class = "fa-solid fa-pen-to-square"}) 
+                @Html.ActionLink("", "Details",new { idPago = item.NumeroPago, idContrato = item.ContratoId},  new { @class = "fa-solid fa-circle-info" }) 
+                @if (User.IsInRole("Administrador"))
+			    {
+                @Html.ActionLink("", "Delete", new { idPago = item.NumeroPago, idContrato = item.ContratoId}, new { @class = "fa-solid fa-trash" })
+			    }
             </td>
+            
         </tr>
 }
     </tbody>

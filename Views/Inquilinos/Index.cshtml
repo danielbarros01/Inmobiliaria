@@ -7,7 +7,7 @@
 <h1>Bienvenido a la seccion de Inquilinos</h1>
 
 <p>
-    <a asp-action="Create">Crear</a>
+    <a asp-action="Create"><i class="fa-solid fa-square-plus"></i></a>
 </p>
 <table class="table">
     <thead>
@@ -55,9 +55,11 @@
                 @Html.DisplayFor(modelItem => item.Telefono)
             </td>
             <td>
-                @Html.ActionLink("Editar", "Edit", new { id=item.Id  }) |
-                @Html.ActionLink("Detalles", "Details", new { id=item.Id }) |
-                @Html.ActionLink("Eliminar", "Delete", new { id=item.Id })
+                @Html.ActionLink("", "Edit", new { id=item.Id }, new {@class = "fa-solid fa-pen-to-square"})
+                @Html.ActionLink("", "Details", new {id=item.Id  },  new { @class = "fa-solid fa-circle-info" }) 
+                @if (User.IsInRole("Administrador")){
+                @Html.ActionLink("", "Delete", new { id = item.Id }, new { @class = "fa-solid fa-trash" })
+                }
             </td>
         </tr>
 }

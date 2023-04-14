@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Inmobiliaria.Models;
 using MySql.Data.MySqlClient;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Inmobiliaria.Controllers
 {
@@ -86,6 +87,7 @@ namespace Inmobiliaria.Controllers
         }
 
         // GET: TipoInmueble/Delete/5
+        [Authorize(Policy = "Administrador")]
         public ActionResult Delete(int id)
         {
             var tipoInmueble = Repo.GetTipo(id);
@@ -95,6 +97,7 @@ namespace Inmobiliaria.Controllers
         // POST: TipoInmueble/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Administrador")]
         public ActionResult Delete(int id, TipoInmueble t)
         {
             try

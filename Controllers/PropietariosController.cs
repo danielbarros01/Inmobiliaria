@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Inmobiliaria.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Inmobiliaria.Controllers
 {
@@ -86,6 +87,7 @@ namespace Inmobiliaria.Controllers
         }
 
         // GET: Propietarios/Delete/5
+        [Authorize(Policy = "Administrador")]
         public ActionResult Delete(int id)
         {
             var propietario = Repo.GetPropietario(id);
@@ -96,6 +98,7 @@ namespace Inmobiliaria.Controllers
         // POST: Propietarios/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Administrador")]
         public ActionResult Delete(int id, Propietario p)
         {
             try

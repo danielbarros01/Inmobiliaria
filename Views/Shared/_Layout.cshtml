@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using System.Security.Claims;
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -7,6 +9,8 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Inmobiliaria.styles.css" asp-append-version="true" />
+    <script src="https://kit.fontawesome.com/e6a1497caa.js" crossorigin="anonymous"></script>
+
 </head>
 <body>
     <header>
@@ -41,6 +45,18 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Pagos">Pagos</a>
                         </li>
                     </ul>
+
+                    <div class="dropdown">
+                        <div class="btn btn-primary dropdown-toggle text-light" id="userMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="lnr lnr-user"></span> @User.Identity.Name
+                        </div>
+                        <div class="dropdown-menu" aria-labelledby="userMenu">
+                            <a class="dropdown-item text-dark" asp-controller="Usuarios" asp-action="Edit" asp-route-id="@User.FindFirstValue("Id")"><i class="lnr lnr-user"></i> Perfil</a>
+                            <a class="dropdown-item text-dark" asp-controller="Usuarios" asp-action="Logout"><i class="lnr lnr-exit"></i> Salir</a>
+                        </div>
+                    </div>
+
+
                 </div>
             </div>
         </nav>
@@ -80,6 +96,7 @@
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>

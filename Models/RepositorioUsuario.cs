@@ -66,7 +66,7 @@ namespace Inmobiliaria.Models
                     command.Parameters.AddWithValue("@apellido", u.Apellido);
                     if (String.IsNullOrEmpty(u.AvatarRuta))
                     {
-                        command.Parameters.AddWithValue("@avatar", DBNull.Value);
+                        command.Parameters.AddWithValue("@avatar", "/uploads/imagenPorDefecto.png");
                     }
                     else
                     {
@@ -91,16 +91,23 @@ namespace Inmobiliaria.Models
             using (var conn = new MySqlConnection(connectionString))
             {
                 string sql = @"UPDATE Usuarios 
-					SET Nombre=@nombre, Apellido=@apellido, AvatarRuta=@avatar, Email=@email, Clave=@clave, Rol=@rol
+					SET Nombre=@nombre, Apellido=@apellido, AvatarRuta=@avatar, Email=@email
 					WHERE Id = @id";
+
+
+                if (u.AvatarRuta == null)
+                {
+                    sql = @"UPDATE Usuarios 
+                        SET Nombre=@nombre, Apellido=@apellido, Email=@email
+                        WHERE Id = @id";
+                }
+
                 using (var command = new MySqlCommand(sql, conn))
                 {
                     command.Parameters.AddWithValue("@nombre", u.Nombre);
                     command.Parameters.AddWithValue("@apellido", u.Apellido);
                     command.Parameters.AddWithValue("@avatar", u.AvatarRuta);
                     command.Parameters.AddWithValue("@email", u.Email);
-                    command.Parameters.AddWithValue("@clave", u.Clave);
-                    command.Parameters.AddWithValue("@rol", u.Rol);
                     command.Parameters.AddWithValue("@id", u.Id);
 
                     conn.Open();
@@ -176,22 +183,72 @@ namespace Inmobiliaria.Models
             return u;
         }
 
+        public Usuario ObtenerPorEmail(string email)
+        {
+            try
+            {
+                Usuario? u = null;
+                using (var conn = new MySqlConnection(connectionString))
+                {
+                    string sql = @"SELECT
+					Id, Nombre, Apellido, AvatarRuta, Email, Clave, Rol FROM Usuarios
+					WHERE Email=@email";
+
+
+                    using (var command = new MySqlCommand(sql, conn))
+                    {
+                        command.Parameters.AddWithValue("@email", email);
+                        conn.Open();
+                        var reader = command.ExecuteReader();
+                        if (reader.Read())
+                        {
+                            u = new Usuario
+                            {
+                                Id = reader.GetInt32(nameof(Usuario.Id)),
+                                Nombre = reader.GetString(nameof(Usuario.Nombre)),
+                                Apellido = reader.GetString(nameof(Usuario.Apellido)),
+                                Email = reader.GetString(nameof(Usuario.Email)),
+                                Clave = reader.GetString(nameof(Usuario.Clave)),
+                                Rol = reader.GetInt32(nameof(Usuario.Rol)),
+                            };
+                        }
+
+                        if (!reader.IsDBNull(reader.GetOrdinal(nameof(Usuario.AvatarRuta))))
+                        {
+                            u.AvatarRuta = reader.GetString(nameof(Usuario.AvatarRuta));
+                        }
+                        else
+                        {
+                            u.AvatarRuta = "/uploads/imagenPorDefecto.png";
+                        }
+                        conn.Close();
+                    }
+                }
+                return u;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return null;
+            }
+        }
+
         public int Eliminar(int id)
-		{
-			int res = -1;
-			using (var conn = new MySqlConnection(connectionString))
-			{
-				string sql = "DELETE FROM Usuarios WHERE Id = @id";
-				using (var command = new MySqlCommand(sql, conn))
-				{
-					command.Parameters.AddWithValue("@id", id);
-					conn.Open();
-					res = command.ExecuteNonQuery();
-					conn.Close();
-				}
-			}
-			return res;
-		}
-    
+        {
+            int res = -1;
+            using (var conn = new MySqlConnection(connectionString))
+            {
+                string sql = "DELETE FROM Usuarios WHERE Id = @id";
+                using (var command = new MySqlCommand(sql, conn))
+                {
+                    command.Parameters.AddWithValue("@id", id);
+                    conn.Open();
+                    res = command.ExecuteNonQuery();
+                    conn.Close();
+                }
+            }
+            return res;
+        }
+
     }
 }

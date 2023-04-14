@@ -1,13 +1,18 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using Inmobiliaria.Models;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Inmobiliaria.Controllers
 {
@@ -24,6 +29,7 @@ namespace Inmobiliaria.Controllers
             this.environment = environment;
             Repo = new RepositorioUsuario();
         }
+
 
         // GET: Usuarios
         public ActionResult Index()
@@ -50,6 +56,7 @@ namespace Inmobiliaria.Controllers
         // POST: Usuarios/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Administrador")]
         public ActionResult Create(Usuario u)
         {
             try
@@ -61,7 +68,7 @@ namespace Inmobiliaria.Controllers
                                 iterationCount: 10000,
                                 numBytesRequested: 256 / 8));
                 u.Clave = hashed;
-                u.Rol = User.IsInRole("Administrador") ? u.Rol : (int)enRoles.Empleado;
+                //u.Rol = User.IsInRole("Administrador") ? u.Rol : (int)enRoles.Empleado;
 
                 int res = Repo.Alta(u);
 
@@ -84,9 +91,23 @@ namespace Inmobiliaria.Controllers
         // GET: Usuarios/Edit/5
         public ActionResult Edit(int id)
         {
-            var user = Repo.ObtenerPorId(id);
+            try
+            {
+                if (User.IsInRole("Empleado") && int.Parse(User.FindFirstValue("Id")) != id)
+                {
+                    ViewBag.Error = "No tienes acceso a este usuario";
+                    return RedirectToAction("Restringido", "Home");
+                }
 
-            return View(user);
+                var user = Repo.ObtenerPorId(id);
+
+                return View(user);
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
+
         }
 
         // POST: Usuarios/Edit/5
@@ -124,6 +145,7 @@ namespace Inmobiliaria.Controllers
         // POST: Usuarios/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Administrador")]
         public ActionResult Delete(int id, Usuario u)
         {
             try
@@ -152,8 +174,23 @@ namespace Inmobiliaria.Controllers
         //[Route("EditPassword", Name = "editPassword")]
         public ActionResult EditPassword(int id)
         {
-            var user = Repo.ObtenerPorId(id);
-            return View(user);
+            try
+            {
+                if (User.IsInRole("Empleado") && int.Parse(User.FindFirstValue("Id")) != id)
+                {
+                    ViewBag.Error = "No tienes acceso a este usuario";
+                    return RedirectToAction("Restringido", "Home");
+                }
+
+                var user = Repo.ObtenerPorId(id);
+                return View(user);
+            }
+            catch (System.Exception)
+            {
+
+                throw;
+            }
+
         }
 
 
@@ -163,6 +200,12 @@ namespace Inmobiliaria.Controllers
         {
             try
             {
+                if (User.IsInRole("Empleado") && int.Parse(User.FindFirstValue("Id")) != u.Id)
+                {
+                    ViewBag.Error = "No tienes acceso a este usuario";
+                    return RedirectToAction("Restringido", "Home");
+                }
+
                 string hashedPassword = Convert.ToBase64String(KeyDerivation.Pbkdf2(
                                 password: currentPassword,
                                 salt: System.Text.Encoding.ASCII.GetBytes(configuration["Salt"]),
@@ -217,6 +260,96 @@ namespace Inmobiliaria.Controllers
                 Console.WriteLine(e);
                 return View(u);
             }
+        }
+
+
+        [HttpGet]
+        [Route("Perfil")]
+        public ActionResult Perfil()
+        {
+            var user = Repo.ObtenerPorEmail(User.Identity.Name);
+            return View("Edit", user);
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("Login")]
+        public ActionResult Login()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Login(LoginView login)
+        {
+            try
+            {
+                var returnUrl = String.IsNullOrEmpty(TempData["returnUrl"] as string) ? "/Home" : TempData["returnUrl"].ToString();
+                if (ModelState.IsValid)
+                {
+                    //Contraseña
+                    string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+                            password: login.Clave,
+                            salt: System.Text.Encoding.ASCII.GetBytes(configuration["Salt"]),
+                            prf: KeyDerivationPrf.HMACSHA1,
+                            iterationCount: 10000,
+                            numBytesRequested: 256 / 8));
+                    //----------------
+
+                    //EMAIL
+                    var user = Repo.ObtenerPorEmail(login.Email);
+
+                    if (user == null || user.Clave != hashed)
+                    {
+                        ModelState.AddModelError("", "El email o la clave no son correctos");
+                        TempData["returnUrl"] = returnUrl;
+                        ViewBag.Error = "El email o la clave no son correctos";
+                        return View();
+                    }
+                    //----------------
+
+                    //Claims
+                    var claims = new List<Claim>
+                    {
+                        new Claim("Id", user.Id+""),
+                        new Claim(ClaimTypes.Name, user.Email),
+                        new Claim("FullName", user.Nombre + " " + user.Apellido),
+                        new Claim(ClaimTypes.Role, user.RolNombre),
+                    };
+
+                    var claimsIdentity = new ClaimsIdentity(
+                                claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                    //----------------
+
+                    //Se utiliza el método HttpContext.SignInAsync para crear una cookie de autenticación para el usuario.
+                    await HttpContext.SignInAsync(
+                                CookieAuthenticationDefaults.AuthenticationScheme,
+                                new ClaimsPrincipal(claimsIdentity));
+
+
+                    TempData.Remove("returnUrl");
+                    return Redirect(returnUrl);
+                }
+                TempData["returnUrl"] = returnUrl;
+                return View();
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", ex.Message);
+                Console.WriteLine(ex);
+                return View();
+            }
+        }
+
+        // GET: /salir
+        [Route("Salir", Name = "Logout")]
+        public async Task<ActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync(
+                    CookieAuthenticationDefaults.AuthenticationScheme);
+            return RedirectToAction("Index", "Home");
         }
     }
 

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Inmobiliaria.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Inmobiliaria.Controllers
 {
@@ -22,10 +23,12 @@ namespace Inmobiliaria.Controllers
         }
 
         // GET: Inmuebles
+        [Authorize]
         public ActionResult Index()
         {
             var lista = Repo.GetInmuebles();
             ViewBag.Mensaje = TempData["Mensaje"];
+            ViewBag.Error = TempData["Error"];
 
             return View(lista);
         }
@@ -93,6 +96,7 @@ namespace Inmobiliaria.Controllers
         }
 
         // GET: Inmuebles/Delete/5
+        [Authorize(Policy = "Administrador")]
         public ActionResult Delete(int id)
         {
             var inm = Repo.GetInmueble(id);
@@ -102,6 +106,7 @@ namespace Inmobiliaria.Controllers
         // POST: Inmuebles/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Administrador")]
         public ActionResult Delete(int id, Inmueble inmueble)
         {
             try
@@ -111,9 +116,10 @@ namespace Inmobiliaria.Controllers
 
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch(Exception e)
             {
-                return View();
+                TempData["Error"] = $"Error: {e.Message}";
+                return RedirectToAction(nameof(Index));
             }
         }
     }

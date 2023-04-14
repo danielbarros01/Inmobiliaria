@@ -16,7 +16,7 @@
             
             <div class="form-group">
                 <label asp-for="NumeroPago" class="control-label"></label>
-                <input asp-for="NumeroPago" class="form-control" disabled/>
+                <input asp-for="NumeroPago" class="form-control" id="NumeroPago" disabled/>
                 <span asp-validation-for="NumeroPago" class="text-danger"></span>
             </div>
 
@@ -54,5 +54,6 @@
     <a asp-action="Index">Volver</a>
 </div>
 
+<script src="~/js/DatosExtra.js"></script>
 <script src="~/js/CreatePago.js" type="module"></script>
 
