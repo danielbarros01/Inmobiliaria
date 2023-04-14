@@ -1,0 +1,7 @@
+Empleado:
+Email:dani15@gmail.com
+Clave:123456
+
+Administrador:
+Email:juli15@gmail.com
+Clave:123456
