@@ -2,6 +2,8 @@
 
 @{
     ViewData["Title"] = "Index";
+    var action = "";
+    var p = "";
 }
 
 <div class="d-flex align-items-center justify-content-between">
@@ -39,8 +41,23 @@
             <th>
                 @Html.DisplayNameFor(model => model.Precio)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Disponible)
+            <th class="">
+                @if(ViewBag.FiltroDisp != null){
+                    if(ViewBag.FiltroDisp){
+                        action = "Index";
+                        p = "ON";
+                    }
+                }else{
+                    action = "Disponibles";
+                    p = "OFF";
+                }
+                
+                <form asp-action=@action method="get">
+                    <input type="submit" value="Disponible" id="btnDisponible" class="d-inline"> 
+                    <p id="stateButton" class="d-inline">
+                        @p
+                    </p>
+                </form>
             </th>
             <th></th>
         </tr>
@@ -70,7 +87,7 @@
                 @Html.DisplayFor(modelItem => item.Precio)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Disponible)
+                @((@item.Disponible) ? "Disponible" : "Ocupado")
             </td>
             <td>
                 @Html.ActionLink("", "Edit", new { id=item.Id }, new {@class = "fa-solid fa-pen-to-square"})
@@ -83,3 +100,31 @@
 }
     </tbody>
 </table>
+
+@* <script>
+    const d = document;
+    let state = false;
+    d.addEventListener('DOMContentLoaded', () => {
+        let boton = d.getElementById("btnDisponible");
+        let p = d.getElementById("stateButton");
+
+        boton.addEventListener("click", () => {
+
+        if(state == false){
+            state = true;
+            p.innerText = "ON";
+            p.style.color = "green";
+
+
+
+        }else{
+            state = false;
+            p.innerText = "OFF";
+            p.style.color = "black";
+        }
+
+
+        })
+    })
+
+</script> *@

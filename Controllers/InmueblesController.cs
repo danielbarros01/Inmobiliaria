@@ -122,5 +122,20 @@ namespace Inmobiliaria.Controllers
                 return RedirectToAction(nameof(Index));
             }
         }
+
+
+
+
+        //---extra
+
+        // GET: Inmuebles/Disponibles
+        [HttpGet]
+        public ActionResult Disponibles(int id)
+        {
+            var datos = Repo.GetDisponibles();
+            ViewBag.FiltroDisp = true;
+
+            return View("Index", datos);
+        }
     }
 }
