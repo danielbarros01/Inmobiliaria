@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
 html {
   font-size: 14px;
 }
@@ -8,6 +10,12 @@ html {
   }
 }
 
+@media (min-width: 576px){
+.container, .container-sm {
+  max-width: 96%;
+}
+}
+
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
   box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
@@ -16,11 +24,12 @@ html {
   position: relative;
   min-height: 100%;
   color: white;
+  
 }
 
 body {
-  margin-bottom: 60px;
   background-image: radial-gradient(var(--color-principal-fondo), var(--color-secundario-fondo));
+  font-family: 'Roboto', sans-serif;
 }
 
 .options{

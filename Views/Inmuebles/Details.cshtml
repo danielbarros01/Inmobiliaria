@@ -4,92 +4,91 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Detalles</h1>
 
-<div>
-    <h4>Inmueble</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Id)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Id)
-        </dd>
+<head>
+    <link rel="stylesheet" href="~/css/inmuebles_detalles.css">
+</head>
 
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Tipo)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Tipo.Tipo)
-        </dd>
+<a asp-action="Index" class="btn-volver"><i class="fa-solid fa-arrow-left"></i></a>
 
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Direccion)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Direccion)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Uso)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Uso)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Cantidad_ambientes)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Cantidad_ambientes)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Coordenadas)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Coordenadas)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Precio)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Precio)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Disponible)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Disponible)
-        </dd>
+<div class="header-detalles d-flex flex-column flex-md-row">
 
-        <hr>
-
-        <h3>Propietario</h3>
-
-        <dt class = "col-sm-2">
-           @Html.DisplayNameFor(model => model.PropietarioId)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.PropietarioId)
-        </dd>
-
-        <dt class = "col-sm-2">
-            Nombre y Apellido
-        </dt>
-        <dd class="col-sm-10">
-            @Model.Propietario.ToString()
-        </dd>
-
-        <dt class = "col-sm-2">
-           @Html.DisplayNameFor(model => model.Propietario.Telefono)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Propietario.Telefono)
-        </dd>
-
-        <hr>
-    </dl>
+    <div class="info-esencial col-md-6 d-flex flex-column">
+        <h5 class="card-title"><i class="fa-solid fa-house"></i>@Model.Tipo.Tipo de uso @Model.Uso</h5>
+        <p><i class="fa-solid fa-person-shelter"></i>@Model.Cantidad_ambientes ambientes</p>
+        <p><i class="fa-solid fa-hand-holding-dollar"></i>@Model.Precio</p>
+        
+    @if(!Model.Disponible) { 
+        <p class="condiciones-contrato">El arrendatario se compromete a mantener la vivienda en buen estado de conservación y limpieza, realizando las reparaciones necesarias en caso de daños ocasionados por su uso o el de sus invitados.No se permitirá la subarrendamiento de la vivienda a terceros sin el consentimiento previo y por escrito del arrendador. En caso de hacerlo, se considerará incumplimiento del contrato y podrá proceder a la rescisión del mismo.</p>
+        <form action="">
+            <input type="submit" value="Ver contrato" class="btn btn-primary">
+        </form>
+    }
 </div>
-<div>
-    @Html.ActionLink("Editar", "Edit", new { id = Model.Id  }) |
-    <a asp-action="Index">Volver</a>
+    <div class="info-foto col-md-6 align-items-center justify-content-center">
+        <img class="card-img-top" src="https://www.bbva.com/wp-content/uploads/2021/04/casas-ecolo%CC%81gicas_apertura-hogar-sostenibilidad-certificado-.jpg" alt="Foto del inmueble">  
+        @if(!Model.Disponible) { 
+            <p class="estado ocupado">Ocupado</p>
+        }else{
+            <p class="estado disponible">Disponible</p>
+        }
+    </div>
+
 </div>
+
+@* columnas dentro de un mismo contenedor debe ser igual a 12 para que el diseño sea responsive y se adapte correctamente a diferentes tamaños de pantalla. *@
+<div class="d-flex flex-column flex-md-row center-detalles">
+
+    <div class="container-card col-12 col-md-3">
+        <div class="card-propietario">
+            <h4 class="text-center">PROPIETARIO</h4>
+            <div class="d-flex align-items-center justify-content-around header-card">
+                <img src="/uploads/imagenPorDefecto.png" alt="">
+                <p class="nombre">Daniel Barros</p>
+            </div>
+            <div class="info-card">
+                <p>Email: daniel@hotmail.com</p>
+                <p>Tel: 26644231321</p>
+            </div>
+        </div>
+
+        @Html.ActionLink("Ver", "Details", "Propietarios", new { id = Model.PropietarioId }, new { @class = "btn btn-primary mt-auto btn-propietario" })
+
+
+    </div>
+
+  <div class="col-12 col-md-9 container-map">  @* 3/4 ancho*@
+    <div id="map" style="height: 400px;"></div>
+  </div>
+
+</div>
+
+<div class="container-botones d-flex flex-column flex-md-row justify-content-center align-items-center">
+    @if(Model.Disponible) { 
+                <button class="btn btn-success btn-alquilar"><i class="fa-solid fa-check-double"></i>Alquilar</button>
+    }
+
+    <button class="btn btn-warning" onclick="location.href='@Url.Action("Edit", new { id = Model.Id })'">
+        <i class="fa-solid fa-pen-to-square"></i>Editar
+    </button>
+
+    <button class="btn btn-danger" onclick="location.href='@Url.Action("Delete", new { id = Model.Id })'">
+        <i class="fa-solid fa-trash"></i>Eliminar
+    </button>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.css" />
+
+<script>
+    
+    var map = L.map('map').setView([-33.30035180845673, -66.3347043994403], 14);
+
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    L.marker([-33.30035180845673, -66.3347043994403]).addTo(map)
+        .openPopup();
+</script>

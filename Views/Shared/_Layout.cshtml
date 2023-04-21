@@ -10,7 +10,6 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Inmobiliaria.styles.css" asp-append-version="true" />
     <script src="https://kit.fontawesome.com/e6a1497caa.js" crossorigin="anonymous"></script>
-
 </head>
 <body>
     <header>
@@ -22,7 +21,7 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+                    <ul class="navbar-nav flex-grow-1 align-items-center">
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
@@ -32,9 +31,17 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Inquilinos">Inquilinos</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Inmuebles">Inmuebles</a>
+
+
+                        <li class="nav-item">                        
+                            <div class="dropdown">
+                                <a asp-controller="Inmuebles"><button class="dropbtn">Inmuebles</button></a>
+                                <div class="dropdown-content">
+                                    <a class="list-group-item my-custom-link" asp-controller="TipoInmueble">Tipos de</a>
+                                </div>
+                            </div>
                         </li>
+
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Contratos">Contratos</a>
                         </li>

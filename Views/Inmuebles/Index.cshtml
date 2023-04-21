@@ -1,130 +1,70 @@
 @model IEnumerable<Inmobiliaria.Models.Inmueble>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Inmuebles";
     var action = "";
     var p = "";
+
+    if(ViewBag.FiltroDisp != null){
+        if(ViewBag.FiltroDisp){
+        @* Si se activo el filtro de ver todos *@
+            action = "Index";
+            p = "Ver todos";
+        }
+        }else{
+        @* Si no ... *@
+            action = "Disponibles";
+            p = "Inmuebles disponibles";
+        }
 }
 
-<div class="d-flex align-items-center justify-content-between">
-    <h1>Seccion de inmuebles</h1>
-    <div>
-        <a class="" asp-area="" asp-controller="TipoInmueble">Tipos de Inmueble</a>
+<head>
+    <link rel="stylesheet" href="~/css/inmuebles.css">
+</head>
+
+
+
+<div class="d-flex justify-content-between">
+    <div class="d-flex container-title">
+        <h1>Inmuebles</h1>
+        <a asp-action="Create"><i class="fa-solid fa-square-plus"></i></a>
+    </div>
+
+    <div class="dropdown">
+        <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+            Filtrar
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+            <li><a class="dropdown-item" asp-controller="Inmuebles" asp-action=@action>@p</a></li>
+        </ul>
     </div>
 </div>
 
-
-<p>
-    <a asp-action="Create"><i class="fa-solid fa-square-plus"></i></a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Id)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Tipo)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Direccion)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Uso)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Cantidad_ambientes)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Coordenadas)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Precio)
-            </th>
-            <th class="">
-                @if(ViewBag.FiltroDisp != null){
-                    if(ViewBag.FiltroDisp){
-                        action = "Index";
-                        p = "ON";
-                    }
+<div class="container-fluid">
+  <div class="row justify-content-evenly">
+    @foreach (var item in Model) {
+        <div class="col-sm-6 col-md-4 col-lg-3 card-inmueble">
+            
+            <div class="card_header">
+                @if(item.Disponible){
+                    <p class="estado disponible">Disponible</p>
                 }else{
-                    action = "Disponibles";
-                    p = "OFF";
+                    <p class="estado ocupado">Ocupado</p>
                 }
-                
-                <form asp-action=@action method="get">
-                    <input type="submit" value="Disponible" id="btnDisponible" class="d-inline"> 
-                    <p id="stateButton" class="d-inline">
-                        @p
-                    </p>
-                </form>
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Tipo.Tipo)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Direccion)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Uso)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Cantidad_ambientes)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Coordenadas)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Precio)
-            </td>
-            <td>
-                @((@item.Disponible) ? "Disponible" : "Ocupado")
-            </td>
-            <td>
-                @Html.ActionLink("", "Edit", new { id=item.Id }, new {@class = "fa-solid fa-pen-to-square"})
-                @Html.ActionLink("", "Details", new {id=item.Id  },  new { @class = "fa-solid fa-circle-info" })
-                @if (User.IsInRole("Administrador")){
-                @Html.ActionLink("", "Delete", new { id = item.Id }, new { @class = "fa-solid fa-trash" })
-                }
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+                <img class="card-img-top" src="https://www.bbva.com/wp-content/uploads/2021/04/casas-ecolo%CC%81gicas_apertura-hogar-sostenibilidad-certificado-.jpg" alt="Foto del inmueble">
+            </div>
 
-@* <script>
-    const d = document;
-    let state = false;
-    d.addEventListener('DOMContentLoaded', () => {
-        let boton = d.getElementById("btnDisponible");
-        let p = d.getElementById("stateButton");
+            <div class="card-body">
+                <h5 class="card-title">@item.Tipo.Tipo - @item.Uso</h5>
+                <p><i class="fa-solid fa-location-dot"></i>@item.Direccion</p>
+                <p><i class="fa-solid fa-person-shelter"></i>@item.Cantidad_ambientes ambientes</p>
+                <p><i class="fa-solid fa-hand-holding-dollar"></i>@item.Precio</p>
+                @Html.ActionLink("Ver", "Details", new {id=item.Id },  new { @class = "fa-solid fa-eye enlace-detalles" })
+            </div>
 
-        boton.addEventListener("click", () => {
-
-        if(state == false){
-            state = true;
-            p.innerText = "ON";
-            p.style.color = "green";
+        </div>
+    }
+  </div>
+</div>
 
 
-
-        }else{
-            state = false;
-            p.innerText = "OFF";
-            p.style.color = "black";
-        }
-
-
-        })
-    })
-
-</script> *@
