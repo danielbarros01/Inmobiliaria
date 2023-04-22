@@ -39,3 +39,7 @@ body {
 a {
   text-decoration: none;
 }
+
+.btn-volver{
+  font-size: 1.6rem;
+}

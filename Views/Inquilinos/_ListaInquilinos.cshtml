@@ -1,0 +1,45 @@
+@model IEnumerable<Inmobiliaria.Models.Inquilino>
+
+@{
+    var Inquilinos = (IList<Inquilino>)ViewBag.Inquilinos2;
+    ViewData["Title"] = "Index";
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Nombre)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Apellido)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Dni)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Inquilinos) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Nombre)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Apellido)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Dni)
+            </td>
+            <td>
+                <button class="btn btn-info btnSeleccionar" 
+                        data-nombreCompleto="@item.Nombre @item.Apellido" 
+                        value="@item.Id">
+                    Seleccionar
+                </button>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

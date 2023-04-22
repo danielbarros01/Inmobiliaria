@@ -63,7 +63,7 @@ public class RepositorioInmueble
                         {
                             Id = reader.GetInt32(nameof(Inmueble.Id)),
                             Direccion = reader.GetString(nameof(Inmueble.Direccion)),
-                            Uso = reader.GetString(nameof(Inmueble.Uso)),
+                            Uso = reader.GetInt32(nameof(Inmueble.Uso)),
                             Cantidad_ambientes = reader.GetInt32(nameof(Inmueble.Cantidad_ambientes)),
                             Coordenadas = reader.GetString(nameof(Inmueble.Coordenadas)),
                             Precio = reader.GetDecimal(nameof(Inmueble.Precio)),
@@ -98,7 +98,7 @@ public class RepositorioInmueble
         using (var conn = new MySqlConnection(connectionString))
         {
             var query = @"
-            SELECT i.Id, i.Direccion, i.Uso, i.Cantidad_ambientes, i.Coordenadas, i.Precio, i.Disponible, i.propietario_Id, p.nombre, p.Apellido,p.Telefono, t.Tipo
+            SELECT i.Id, i.Direccion, i.Uso, i.Cantidad_ambientes, i.Coordenadas, i.Precio, i.Disponible, i.propietario_Id, p.nombre, p.Apellido,p.Telefono, p.Email, t.Tipo
             FROM inmuebles i
             INNER JOIN propietarios p ON i.propietario_id = p.Id
             INNER JOIN tipos_inmueble t ON i.tipo_inmueble_Id = t.Id
@@ -116,7 +116,7 @@ public class RepositorioInmueble
                         {
                             Id = reader.GetInt32(nameof(Inmueble.Id)),
                             Direccion = reader.GetString(nameof(Inmueble.Direccion)),
-                            Uso = reader.GetString(nameof(Inmueble.Uso)),
+                            Uso = reader.GetInt32(nameof(Inmueble.Uso)),
                             Cantidad_ambientes = reader.GetInt32(nameof(Inmueble.Cantidad_ambientes)),
                             Coordenadas = reader.GetString(nameof(Inmueble.Coordenadas)),
                             Precio = reader.GetDecimal(nameof(Inmueble.Precio)),
@@ -126,7 +126,8 @@ public class RepositorioInmueble
                             {
                                 Nombre = reader.GetString(nameof(Inmueble.Propietario.Nombre)),
                                 Apellido = reader.GetString(nameof(Inmueble.Propietario.Apellido)),
-                                Telefono = reader.GetString(nameof(Inmueble.Propietario.Telefono))
+                                Telefono = reader.GetString(nameof(Inmueble.Propietario.Telefono)),
+                                Email = reader.GetString(nameof(Inmueble.Propietario.Email))
                             },
                             Tipo = new TipoInmueble
                             {
@@ -219,7 +220,7 @@ public class RepositorioInmueble
                         {
                             Id = reader.GetInt32(nameof(Inmueble.Id)),
                             Direccion = reader.GetString(nameof(Inmueble.Direccion)),
-                            Uso = reader.GetString(nameof(Inmueble.Uso)),
+                            Uso = reader.GetInt32(nameof(Inmueble.Uso)),
                             Cantidad_ambientes = reader.GetInt32(nameof(Inmueble.Cantidad_ambientes)),
                             Coordenadas = reader.GetString(nameof(Inmueble.Coordenadas)),
                             Precio = reader.GetDecimal(nameof(Inmueble.Precio)),

@@ -92,15 +92,10 @@ i{
     font-size: 1.8rem;
 }
 
-.container-botones button{
+.container-botones button, .btn-alquilar{
     width: 12rem;
     margin-right: 3rem;
     font-size: 1.4rem;
-}
-
-.btn-volver{
-    font-size: 1.6rem;
-    
 }
 
 /* Para dispositivos moviles  */

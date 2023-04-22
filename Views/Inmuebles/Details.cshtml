@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Details";
+    var Contrato = ViewBag.Contrato;
 }
 
 
@@ -14,17 +15,19 @@
 <div class="header-detalles d-flex flex-column flex-md-row">
 
     <div class="info-esencial col-md-6 d-flex flex-column">
-        <h5 class="card-title"><i class="fa-solid fa-house"></i>@Model.Tipo.Tipo de uso @Model.Uso</h5>
+        <h5 class="card-title"><i class="fa-solid fa-house"></i>@Model.Tipo.Tipo de uso @Model.UsoNombre</h5>
         <p><i class="fa-solid fa-person-shelter"></i>@Model.Cantidad_ambientes ambientes</p>
         <p><i class="fa-solid fa-hand-holding-dollar"></i>@Model.Precio</p>
+        <p><i class="fa-solid fa-location-dot"></i>@Model.Direccion</p>
         
-    @if(!Model.Disponible) { 
-        <p class="condiciones-contrato">El arrendatario se compromete a mantener la vivienda en buen estado de conservación y limpieza, realizando las reparaciones necesarias en caso de daños ocasionados por su uso o el de sus invitados.No se permitirá la subarrendamiento de la vivienda a terceros sin el consentimiento previo y por escrito del arrendador. En caso de hacerlo, se considerará incumplimiento del contrato y podrá proceder a la rescisión del mismo.</p>
-        <form action="">
-            <input type="submit" value="Ver contrato" class="btn btn-primary">
-        </form>
-    }
-</div>
+        @if(!Model.Disponible) { 
+            <p class="condiciones-contrato">El arrendatario se compromete a mantener la vivienda en buen estado de conservación y limpieza, realizando las reparaciones necesarias en caso de daños ocasionados por su uso o el de sus invitados.No se permitirá la subarrendamiento de la vivienda a terceros sin el consentimiento previo y por escrito del arrendador. En caso de hacerlo, se considerará incumplimiento del contrato y podrá proceder a la rescisión del mismo.</p>
+            <div>
+                @Html.ActionLink("Ver Contrato", "Details", "Contratos", new { id = Contrato.Id }, new { @class = "btn btn-primary"})
+            </div>
+        }
+    </div>
+
     <div class="info-foto col-md-6 align-items-center justify-content-center">
         <img class="card-img-top" src="https://www.bbva.com/wp-content/uploads/2021/04/casas-ecolo%CC%81gicas_apertura-hogar-sostenibilidad-certificado-.jpg" alt="Foto del inmueble">  
         @if(!Model.Disponible) { 
@@ -44,11 +47,11 @@
             <h4 class="text-center">PROPIETARIO</h4>
             <div class="d-flex align-items-center justify-content-around header-card">
                 <img src="/uploads/imagenPorDefecto.png" alt="">
-                <p class="nombre">Daniel Barros</p>
+                <p class="nombre">@Model.Propietario.Nombre @Model.Propietario.Apellido</p>
             </div>
             <div class="info-card">
-                <p>Email: daniel@hotmail.com</p>
-                <p>Tel: 26644231321</p>
+                <p>Email: @Model.Propietario.Email</p>
+                <p>Tel: @Model.Propietario.Telefono</p>
             </div>
         </div>
 
@@ -65,7 +68,9 @@
 
 <div class="container-botones d-flex flex-column flex-md-row justify-content-center align-items-center">
     @if(Model.Disponible) { 
-                <button class="btn btn-success btn-alquilar"><i class="fa-solid fa-check-double"></i>Alquilar</button>
+        <a href="@Url.Action("Create", "Contratos",  new { idInmueble = @Model.Id })" class="btn btn-success btn-alquilar">
+            <i class="fa-solid fa-check-double"></i>Alquilar
+        </a>
     }
 
     <button class="btn btn-warning" onclick="location.href='@Url.Action("Edit", new { id = Model.Id })'">
@@ -82,13 +87,16 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.css" />
 
 <script>
-    
-    var map = L.map('map').setView([-33.30035180845673, -66.3347043994403], 14);
+    var coordenadas = '@Model.Coordenadas';
+    var latitud = coordenadas.split(',')[0].trim(); //en dos partes separadas por una coma, y luego se toma la primera parte usando el índice [0]
+    var longitud = coordenadas.split(',')[1].trim(); //en dos partes separadas por una coma, y luego se toma la primera parte usando el índice [0]
+
+    var map = L.map('map').setView([latitud, longitud], 14);
 
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
 
-    L.marker([-33.30035180845673, -66.3347043994403]).addTo(map)
+    L.marker([latitud, longitud]).addTo(map)
         .openPopup();
 </script>

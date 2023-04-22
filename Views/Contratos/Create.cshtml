@@ -3,68 +3,148 @@
 @{
     ViewData["Title"] = "Create";
     var Inquilinos = (IList<Inquilino>)ViewBag.Inquilinos2;
-    var Inmuebles = (IList<Inmueble>)ViewBag.Inmuebles2;
+    var Inmueble = ViewBag.Inmueble;
 }
 
-<h1>Crear</h1>
+<head>
+    <link rel="stylesheet" href="~/css/contratos_create.css">
+</head>
 
-<h4>Contrato</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Desde" class="control-label"></label>
-                <input asp-for="Desde" class="form-control" />
-                <span asp-validation-for="Desde" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Hasta" class="control-label"></label>
-                <input asp-for="Hasta" class="form-control" />
-                <span asp-validation-for="Hasta" class="text-danger"></span>
-            </div>
-            <div class="form-group">
+<a asp-action="Index" class="btn-volver"><i class="fa-solid fa-arrow-left"></i></a>
+
+<div class="header-inmueble d-flex justify-content-between">
+
+    <div class="info-esencial d-flex flex-column justify-content-center text-center">
+        <h5 class="card-title"><i class="fa-solid fa-house"></i>@Inmueble.Tipo.Tipo de uso @Inmueble.UsoNombre</h5>
+        <p><i class="fa-solid fa-person-shelter"></i>@Inmueble.Cantidad_ambientes ambientes</p>
+        <p><i class="fa-solid fa-hand-holding-dollar"></i>@Inmueble.Precio</p>
+        <p><i class="fa-solid fa-location-dot"></i>@Inmueble.Direccion</p>
+    </div>
+
+    <div class="info-foto">
+        <img class="card-img-top" src="https://www.bbva.com/wp-content/uploads/2021/04/casas-ecolo%CC%81gicas_apertura-hogar-sostenibilidad-certificado-.jpg" alt="Foto del inmueble">  
+    </div>
+
+</div>
+
+<div class="info-contrato">
+    <form asp-action="Create">
+
+        <div class="form-group hidden disabled">
+            <label class="control-label">Inmueble</label>
+            <input asp-for="Inmueble.Id" name="Inmueble.Id" id="input-inmueble" class="form-control" value="@Inmueble.Id"/>
+            <span asp-validation-for="Inmueble" class="text-danger"></span>
+        </div>
+
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="condiciones-fechas row d-flex flex-md-row">
+            <div class="condiciones form-group  col-md-8">
                 <label asp-for="Condiciones" class="control-label"></label>
-                <input asp-for="Condiciones" class="form-control" />
+                <textarea asp-for="Condiciones" class="form-control"></textarea>
                 <span asp-validation-for="Condiciones" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Monto" class="control-label"></label>
-                <input asp-for="Monto" class="form-control" />
-                <span asp-validation-for="Monto" class="text-danger"></span>
-            </div>
 
-            <div class="form-group">
-                <label class="control-label">Inmueble</label>
-                <select class="form-control" name="Inmueble.Id">
-                    @foreach (var item in Inmuebles)
-                    {
-                        <option value="@item.Id">@(item.ToString())</option>
-                    }
-                </select>
-                <span asp-validation-for="Inmueble" class="text-danger"></span>
+            <div class="fechas  col-md-4">
+                <div class="form-group">
+                    <label asp-for="Desde" class="control-label">Fecha de ingreso</label>
+                    <input asp-for="Desde" class="form-control" type="date"/>
+                    <span asp-validation-for="Desde" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Hasta" class="control-label">Fecha de salida</label>
+                    <input asp-for="Hasta" class="form-control" type="date"/>
+                    <span asp-validation-for="Hasta" class="text-danger"></span>
+                </div>
             </div>
+        </div>
 
-           <div class="form-group">
-                <label class="control-label">Inquilino</label>
-                <select class="form-control" name="Inquilino.Id">
-                    @foreach (var item in Inquilinos)
-                    {
-                        <option value="@item.Id">@(item.Nombre + " " + item.Apellido)</option>
-                    }
-                </select>
-                <span asp-validation-for="Inquilino" class="text-danger"></span>
-            </div>  
 
-            <div class="form-group">
-                <input type="submit" value="Crear" class="btn btn-primary" />
+        <div class="monto-inquilino">
+            <label for="">Monto</label>
+                <div class="monto d-flex">
+                    <input type="number" value="@Inmueble.Precio" id="inputPrecio" disabled>
+                    <p>+</p>
+                    <input type="number" id="inputValorAgregado">
+                    <p> = </p>
+                    <p class="resultado-suma">@Inmueble.Precio</p>
+                    @* Esto sera invisible pero recibira los datos *@
+                     <div class="form-group hidden">
+                        <label asp-for="Monto" class="control-label"></label>
+                        <input asp-for="Monto" class="form-control" id="input-monto-envio" value="@Inmueble.Precio"/>
+                        <span asp-validation-for="Monto" class="text-danger"></span>
+                    </div> 
+                    @* ------ *@
+                </div>
+            <label for="">Inquilino</label>
+            <div class="inquilino d-flex align-items-center">
+                <button type="button" class="btn btn-primary btn-inquilino" data-toggle="modal" data-target="#modalInquilinos">
+                    Elegir Inquilino
+                </button>
+                <a href="">Crear Inquilino</a>
             </div>
-        </form>
+        </div>
+
+        <div class="form-group hidden">
+            <label class="control-label">Inquilino</label>
+            <input asp-for="Inquilino.Id" name="Inquilino.Id" id="input-inquilino" class="form-control" value=""/>
+            <span asp-validation-for="Inquilino" class="text-danger"></span>
+        </div>  
+
+        <div class="botones-bottom form-group d-flex justify-content-center align-items-center">
+                <input type="submit" value="Iniciar contrato" class="btn btn-success"/>
+                <a class="btn btn-danger">Cancelar</a>
+        </div>
+    </form>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="modalInquilinos" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-inquilinos" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Inquilinos</h5>
+        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        @Html.Partial("./../Inquilinos/_ListaInquilinos.cshtml")
+      </div>
     </div>
+  </div>
 </div>
 
-<div>
-    <a asp-action="Index">Volver</a>
-</div>
 
+<script>
+    //Precio
+    const input1 = document.getElementById("inputPrecio");
+    const input2 = document.getElementById("inputValorAgregado");
+    let pResultado = document.querySelector(".resultado-suma");
+
+    const inputEnvioMonto = document.getElementById("input-monto-envio");
+
+    input2.addEventListener('keyup', () => {
+        let result = parseFloat(input1.value) + parseFloat(input2.value);
+        if (isNaN(result)){
+            pResultado.innerHTML = input1.value;
+            inputEnvioMonto.value = input1.value;
+        }else{
+            pResultado.innerHTML = result;
+            inputEnvioMonto.value = result;
+        }
+    });
+    //-----
+
+    //Inquilino
+    const modal = document.getElementById("modalInquilinos");
+    let buttonInquilino = document.querySelector(".btn-inquilino");
+    let inputInquilino = document.getElementById("input-inquilino");
+
+    modal.addEventListener("click", (e) =>{
+        if(e.target.matches('.btnSeleccionar')){
+            buttonInquilino.innerHTML = e.target.dataset.nombrecompleto;
+            inputInquilino.value = e.target.value;
+            console.log(e.target.value)
+        }
+    });
+    //-----
+</script>

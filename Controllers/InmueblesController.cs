@@ -14,12 +14,14 @@ namespace Inmobiliaria.Controllers
         private readonly RepositorioInmueble Repo;
         private readonly RepositorioPropietario RepoPropietarios;
         private readonly RepositorioTipoInmueble RepoTipoInmueble;
+        private readonly RepositorioContrato RepoContratos;
 
         public InmueblesController()
         {
             Repo = new RepositorioInmueble();
             RepoPropietarios = new RepositorioPropietario();
             RepoTipoInmueble = new RepositorioTipoInmueble();
+            RepoContratos = new RepositorioContrato();
         }
 
         // GET: Inmuebles
@@ -33,18 +35,11 @@ namespace Inmobiliaria.Controllers
             return View(lista);
         }
 
-
-        // GET: Inmuebles/Details/5
-        public ActionResult Details2(int id)
-        {
-            var inm = Repo.GetInmueble(id);   
-            return View(inm);
-        }
-
         // GET: Inmuebles/Details/5
         public ActionResult Details(int id)
         {
-            var inm = Repo.GetInmueble(id);   
+            var inm = Repo.GetInmueble(id);
+            ViewBag.Contrato = RepoContratos.obtenerIdPorInmueble(id);   
             return View(inm);
         }
 

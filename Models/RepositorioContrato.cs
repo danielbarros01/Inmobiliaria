@@ -17,7 +17,9 @@ public class RepositorioContrato
             string query = @"INSERT INTO 
             contratos (Desde, Hasta, Condiciones, Monto, inmueble_Id, inquilino_Id)
             VALUES (@Desde, @Hasta, @Condiciones, @Monto, @InmuebleId, @InquilinoId);
-            SELECT LAST_INSERT_ID();";
+            SELECT LAST_INSERT_ID();
+            UPDATE inmuebles SET Disponible = 0 WHERE id = @InmuebleId;
+            ";
 
             using (MySqlCommand command = new MySqlCommand(query, connection))
             {
@@ -187,6 +189,38 @@ public class RepositorioContrato
                 command.Parameters.AddWithValue("@Id", id);
                 conn.Open();
                 res = command.ExecuteNonQuery();
+                conn.Close();
+            }
+        }
+        return res;
+    }
+
+    public Contrato obtenerIdPorInmueble(int idInmueble)
+    {
+        Contrato? res = null;
+
+        using (var conn = new MySqlConnection(connectionString))
+        {
+            var query = @"
+            SELECT c.Id
+            FROM inmobiliaria.contratos c
+            INNER JOIN inmuebles inm ON c.inmueble_Id = inm.Id
+            WHERE inm.Id = @Id";
+
+            using (var command = new MySqlCommand(query, conn))
+            {
+                command.Parameters.AddWithValue("@Id", idInmueble);
+                conn.Open();
+                using (var reader = command.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        res = new Contrato
+                        {
+                            Id = reader.GetInt32(nameof(Contrato.Id))
+                        };
+                    }
+                }
                 conn.Close();
             }
         }

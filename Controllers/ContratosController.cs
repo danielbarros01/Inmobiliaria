@@ -40,10 +40,19 @@ namespace Inmobiliaria.Controllers
         }
 
         // GET: Contratos/Create
-        public ActionResult Create()
+        public ActionResult Create(int idInmueble)
         {
             ViewBag.Inquilinos2 = RepoInquilinos.GetInquilinos();
-            ViewBag.Inmuebles2 = RepoInmuebles.GetInmuebles();
+            ViewBag.Inmueble = RepoInmuebles.GetInmueble(idInmueble);
+
+            return View();
+        }
+
+        // GET: Contratos/Create
+        public ActionResult Create2(int idInmueble)
+        {
+            ViewBag.Inquilinos2 = RepoInquilinos.GetInquilinos();
+            ViewBag.Inmueble = RepoInmuebles.GetInmueble(idInmueble);
 
             return View();
         }
