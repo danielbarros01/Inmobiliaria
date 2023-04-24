@@ -1,0 +1,67 @@
+.container-contrato{
+    background-color: #a0d0ff;
+    border: 2px solid #1b6ec2;
+    border-radius: 10px;
+    color: #03386d;
+    padding: 1rem;
+    position: relative;
+}
+
+
+.card-inquilino{
+    margin: auto auto;
+    background-color: #1b6ec2;
+    color: white;
+    border-radius: 20px;
+    height: 200px;
+    float: bottom;
+    margin-top: 2rem;
+    padding: 1rem;
+    max-width: 400px;
+}
+
+.card-inquilino i,h5{
+    font-size: 2rem;
+}
+
+.card-inquilino p{
+    font-size: 1.3rem;
+}
+
+.card-fecha{
+    background-color: #1bc271;
+    border-radius: 20px;
+    padding: 1rem;
+    margin: 1rem;
+}
+
+.container-contrato h6{
+    font-size: 1.4rem;
+    font-weight: bold;
+}
+
+.card-condiciones{
+    background-color: #1bc271;
+    border-radius: 20px;
+    padding: 1rem;
+    margin: 1rem;
+}
+
+.card-monto{
+    background-color: #1bc271;
+    border-radius: 20px;
+    padding: 1rem;
+    margin: 1rem;
+    max-height: 300px;
+}
+
+.bottom-contrato > *{
+    margin: 1rem;
+    min-width: 100px;
+}
+
+.bottom-contrato .btn-warning{
+    background-color: #edb203;
+    border: none;
+    color: white;
+}

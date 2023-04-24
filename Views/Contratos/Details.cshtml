@@ -4,58 +4,81 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Detalles</h1>
+<head>
+    <link rel="stylesheet" href="~/css/contratos_create.css">
+    <link rel="stylesheet" href="~/css/contratos_detalles.css">
+</head>
 
-<div>
-    <h4>Contrato</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Id)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Id)
-        </dd>
-        <dt class = "col-sm-2">
-           Inquilino
-        </dt>
-        <dd class = "col-sm-10">
-          <a href="">@Model.Inquilino.ToString()</a>
-        </dd>
-        <dt class = "col-sm-2">
-            Inmueble
-        </dt>
-        <dd class = "col-sm-10">
-            <a href="">@Model.Inmueble.Tipo en @Model.Inmueble.Direccion</a>  
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Desde)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Desde)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Hasta)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Hasta)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Condiciones)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Condiciones)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Monto)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Monto)
-        </dd>
-        
-    </dl>
+<a asp-action="Index" class="btn-volver"><i class="fa-solid fa-arrow-left"></i></a>
+
+<div class="container-contrato">
+    <h2 class="text-center">Contrato Nº @Model.Id</h2>
+
+    <div class="header-contrato row d-flex flex-md-row">
+        @*.. Card inmueble ..*@
+        <div class="header-inmueble d-flex justify-content-between col-md-8">
+            <div class="info-esencial d-flex flex-column justify-content-center text-center">
+                <h5 class="card-title"><i class="fa-solid fa-house"></i>@Model.Inmueble.Tipo.Tipo de uso @Model.Inmueble.UsoNombre</h5>
+                <p><i class="fa-solid fa-person-shelter"></i>@Model.Inmueble.Cantidad_ambientes ambientes</p>
+                <p><i class="fa-solid fa-location-dot"></i>@Model.Inmueble.Direccion</p>
+            </div>
+
+            <div class="info-foto">
+                <img class="card-img-top" src="https://www.bbva.com/wp-content/uploads/2021/04/casas-ecolo%CC%81gicas_apertura-hogar-sostenibilidad-certificado-.jpg" alt="Foto del inmueble">  
+            </div>
+        </div>
+        @*-- Card inmueble --*@
+
+        @*.. Card inquilino ..*@
+        <div class="card-inquilino d-flex flex-column col-md-4 text-center">
+                <i class="fa-solid fa-person"></i>
+                <h5 class="card-title">@Model.Inquilino.ToString()</h5>
+                <p>@Model.Inquilino.Email</p>
+                <p>Tel: @Model.Inquilino.Telefono</p>
+        </div>
+        @*-- Card inquilino --*@
+
+    </div>
+
+    <div class="center-contrato row d-flex flex-md-row justify-content-center">
+
+        <div class="fechas col-md-3 d-flex flex-column justify-content-center">
+            <div class="card-fecha">
+                <h6>El contrato inicio el</h6>
+                <p>@Model.Desde</p>
+            </div>
+            <div class="card-fecha border border-danger">
+                <h6>El contrato vence el</h6>
+                <p>@Model.Hasta</p>
+                <strong><p class="text-danger">Quedan x dias de contrato</p></strong>
+            </div>
+        </div>
+
+        <div class="card-monto col-md-2">
+            <h6>Monto</h6>
+            <p>Precio del alquiler: @Model.Inmueble.Precio</p>
+            <p id="valorExtraAlquiler"></p>
+            <strong><p>Total: @Model.Monto</p></strong>
+        </div>
+
+        <div class="card-condiciones d-flex flex-column justify-content-center col-md-6">
+            <h6>Condiciones</h6>
+            <p>@Model.Condiciones</p>
+        </div>
+    </div>
+
+    <div class="bottom-contrato d-flex justify-content-center">
+        @Html.ActionLink("Ver Pagos", "ListPagosContrato", "Contratos", new { id = Model.Id }, new { @class = "btn btn-primary"})
+        @Html.ActionLink("Renovar contrato", "RenovarContrato", "Contratos", new { id = Model.Id }, new { @class = "btn btn-primary"})
+        @Html.ActionLink("Editar", "Edit", "Contratos", new { id = Model.Id }, new { @class = "btn btn-warning"})
+        @Html.ActionLink("Cancelar contrato", "CancelarContrato", "Contratos", new { id = Model.Id }, new { @class = "btn btn-danger"})
+    </div>
+
 </div>
-<div>
-    @Html.ActionLink("Editar", "Edit", new {  id = Model.Id  }) |
-    <a asp-action="Index">Volver</a>
-</div>
+
+<script>
+    const extra = document.getElementById("valorExtraAlquiler");
+    let calculo = @Model.Monto - @Model.Inmueble.Precio;
+    
+    extra.innerHTML = "Extras: " + calculo;
+</script>

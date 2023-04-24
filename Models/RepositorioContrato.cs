@@ -101,7 +101,7 @@ public class RepositorioContrato
         using (var conn = new MySqlConnection(connectionString))
         {
             var query = @"
-            SELECT c.Id,Desde,Hasta,Condiciones,Monto, inm.Id as InmuebleId ,inm.Direccion, tipos.Tipo, inq.Id as InquilinoId ,inq.Nombre, inq.Apellido
+            SELECT c.Id,Desde,Hasta,Condiciones,Monto, inm.Id as InmuebleId ,inm.Direccion, inm.Uso,inm.Cantidad_ambientes, inm.Precio, tipos.Tipo, inq.Id as InquilinoId ,inq.Nombre, inq.Apellido, inq.Email, inq.Telefono
             FROM inmobiliaria.contratos c
             INNER JOIN inmuebles inm ON c.inmueble_Id = inm.Id
             INNER JOIN inquilinos inq ON c.inquilino_Id = inq.Id
@@ -131,12 +131,17 @@ public class RepositorioContrato
                                 Tipo = new TipoInmueble
                                 {
                                     Tipo = reader.GetString(nameof(TipoInmueble.Tipo)),
-                                }
+                                },
+                                Uso = reader.GetInt32(nameof(Inmueble.Uso)),
+                                Cantidad_ambientes = reader.GetInt32(nameof(Inmueble.Cantidad_ambientes)),
+                                Precio = reader.GetDecimal(nameof(Inmueble.Precio))
                             },
                             Inquilino = new Inquilino
                             {
                                 Nombre = reader.GetString(nameof(Inquilino.Nombre)),
-                                Apellido = reader.GetString(nameof(Inquilino.Apellido))
+                                Apellido = reader.GetString(nameof(Inquilino.Apellido)),
+                                Email = reader.GetString(nameof(Inquilino.Email)),
+                                Telefono = reader.GetString(nameof(Inquilino.Telefono))
                             }
                         };
                     }

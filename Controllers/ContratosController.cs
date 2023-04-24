@@ -39,6 +39,13 @@ namespace Inmobiliaria.Controllers
             return View(contrato);
         }
 
+        // GET: Contratos/Details2/5
+        public ActionResult Details2(int id)
+        {
+            var contrato = Repo.GetContrato(id);
+            return View(contrato);
+        }
+
         // GET: Contratos/Create
         public ActionResult Create(int idInmueble)
         {
@@ -65,12 +72,12 @@ namespace Inmobiliaria.Controllers
             try
             {
                 Repo.Alta(contrato);
-                TempData["Mensaje"] =  $"Contrato {contrato.Id} de {contrato.Inquilino.ToString()} creado!";
+                TempData["Mensaje"] = $"Contrato {contrato.Id} de {contrato.Inquilino.ToString()} creado!";
                 return RedirectToAction(nameof(Index));
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                TempData["Mensaje"] =  $"Contrato {ex}!";
+                TempData["Mensaje"] = $"Contrato {ex}!";
                 return RedirectToAction(nameof(Index));
             }
         }
@@ -81,7 +88,7 @@ namespace Inmobiliaria.Controllers
             var contrato = Repo.GetContrato(id);
             ViewBag.Inquilinos = RepoInquilinos.GetInquilinos();
             ViewBag.Inmuebles = RepoInmuebles.GetInmuebles();
-            TempData["Mensaje"] =  $"Contrato {contrato.Id} de {contrato.Inquilino.ToString()} modificado!";
+            TempData["Mensaje"] = $"Contrato {contrato.Id} de {contrato.Inquilino.ToString()} modificado!";
             return View(contrato);
         }
 
@@ -121,13 +128,28 @@ namespace Inmobiliaria.Controllers
             {
                 // TODO: Add delete logic here
                 Repo.Eliminar(id);
-                TempData["Mensaje"] =  $"Contrato {id} eliminado!";
+                TempData["Mensaje"] = $"Contrato {id} eliminado!";
                 return RedirectToAction(nameof(Index));
             }
             catch
             {
                 return View();
             }
+        }
+
+        public ActionResult ListPagosContrato(int id)
+        {
+            try
+            {
+                //Repo.PagosContrato(id);
+                return View();
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+
         }
     }
 }
