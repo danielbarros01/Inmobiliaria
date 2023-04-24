@@ -210,7 +210,7 @@ public class RepositorioContrato
             SELECT c.Id
             FROM inmobiliaria.contratos c
             INNER JOIN inmuebles inm ON c.inmueble_Id = inm.Id
-            WHERE inm.Id = @Id";
+            WHERE inm.Id = @Id;";
 
             using (var command = new MySqlCommand(query, conn))
             {
