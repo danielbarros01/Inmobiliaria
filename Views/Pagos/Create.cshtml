@@ -2,53 +2,10 @@
 
 @{
     ViewData["Title"] = "Create";
-    var Contratos = (IList<Contrato>)ViewBag.Contratos;
 }
-
-<h1>Nuevo pago</h1>
-
-<h4>Pago</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            
-            <div class="form-group">
-                <label asp-for="NumeroPago" class="control-label"></label>
-                <input asp-for="NumeroPago" class="form-control" id="NumeroPago" disabled/>
-                <span asp-validation-for="NumeroPago" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label class="control-label">Monto</label>
-                <input class="form-control" id="MontoPago" disabled/>
-                <span  class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="Fecha" class="control-label"></label>
-                <input asp-for="Fecha" class="form-control" type="datetime-local" id="fecha-input" required/>
-                <span asp-validation-for="Fecha" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label class="control-label">Contrato</label>
-                <select class="form-control" name="ContratoId" onchange="datosExtra(this.value)" id="ContratoSelect">
-                    @foreach (var item in Contratos)
-                    {
-                        <option value="@item.Id">@(item.ToString())</option>
-                    }
-                </select>
-                <span asp-validation-for="ContratoId" class="text-danger"></span>
-            </div>  
-
-            <div class="form-group">
-                <input type="submit" value="Pagar" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
-</div>
+@using (Html.BeginForm("Create", "Pagos", new { returnUrl = "index" }, FormMethod.Post)){
+    @await Html.PartialAsync("./_Create")
+}
 
 <div>
     <a asp-action="Index">Volver</a>
@@ -56,4 +13,3 @@
 
 <script src="~/js/DatosExtra.js"></script>
 <script src="~/js/CreatePago.js" type="module"></script>
-

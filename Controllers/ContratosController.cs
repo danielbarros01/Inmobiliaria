@@ -136,20 +136,5 @@ namespace Inmobiliaria.Controllers
                 return View();
             }
         }
-
-        public ActionResult ListPagosContrato(int id)
-        {
-            try
-            {
-                //Repo.PagosContrato(id);
-                return View();
-            }
-            catch (Exception ex)
-            {
-
-                throw;
-            }
-
-        }
     }
 }

@@ -1,0 +1,50 @@
+@{
+    ViewData["Title"] = "Create";
+    var Contratos = (IList<Contrato>)ViewBag.Contratos;
+}
+
+
+<div class="form-group">
+    <label for="NumeroPago" class="control-label">Nº</label>
+    <input name="NumeroPago" class="form-control" id="NumeroPago" disabled/>
+    <span for="NumeroPago" class="text-danger"></span>
+</div>
+
+<div class="form-group">
+    <label class="control-label">Monto</label>
+    <input class="form-control" id="MontoPago" disabled/>
+    <span  class="text-danger"></span>
+</div>
+
+<div class="form-group">
+    <label for="Fecha" class="control-label"></label>
+    <input name="Fecha" class="form-control" type="date" id="fecha-input" required/>
+    <span for="Fecha" class="text-danger"></span>
+</div>
+
+
+@if(ViewBag.Contratos != null){
+    <div class="form-group">
+        <label class="control-label">Contrato</label>
+        <select class="form-control" name="ContratoId" onchange="datosExtra(this.value)" id="ContratoSelect">
+            @foreach (var item in Contratos)
+            {
+                <option value="@item.Id">@(item.ToString())</option>
+            }
+        </select>
+        <span for="ContratoId" class="text-danger"></span>
+    </div>  
+}else{
+    <div class="form-group" hidden disabled>
+        <input id="ContratoId" name="ContratoId" class="form-control"/>
+    </div>
+}
+
+<div class="form-group">
+    <input type="submit" value="Pagar" class="btn btn-primary" />
+</div>
+
+
+
+
+

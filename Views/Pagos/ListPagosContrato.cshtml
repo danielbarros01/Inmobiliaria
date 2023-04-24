@@ -1,0 +1,101 @@
+@model IEnumerable<Inmobiliaria.Models.Pago>
+
+@{
+    ViewData["Title"] = "Index";
+    var primerPago = Model.FirstOrDefault();
+    var Contrato = ViewBag.Contrato;
+}
+
+<h1>Pagos del contrato Nº @Contrato.Id</h1>
+
+@* CREAR Contrato *@
+<button class="btn btn-primary" id="btn-nuevo-pago" data-toggle="modal" data-target="#modalCrearPago" value=@Contrato.Id>Nuevo Pago</button>
+
+<!-- Modal -->
+<div class="modal fade" id="modalCrearPago" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-inquilinos" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Inquilinos</h5>
+        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+       @using (Html.BeginForm("CreateTwo", "Pagos", new {contratoId = Contrato.Id},FormMethod.Post)){
+            @Html.Partial("./_Create.cshtml")
+        }   
+      </div>
+    </div>
+  </div>
+</div>
+@* ---- *@
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.NumeroPago)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Fecha)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Contrato)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.NumeroPago)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Fecha)
+            </td>
+            <td>
+                @item.Contrato.ToString()
+            </td>
+            
+            <td>
+                @Html.ActionLink("", "Edit", new { idPago = item.NumeroPago, idContrato = item.ContratoId}, new {@class = "fa-solid fa-pen-to-square"}) 
+                @Html.ActionLink("", "Details",new { idPago = item.NumeroPago, idContrato = item.ContratoId},  new { @class = "fa-solid fa-circle-info" }) 
+                @if (User.IsInRole("Administrador"))
+			    {
+                @Html.ActionLink("", "Delete", new { idPago = item.NumeroPago, idContrato = item.ContratoId}, new { @class = "fa-solid fa-trash" })
+			    }
+            </td>
+            
+        </tr>
+}
+    </tbody>
+</table>
+
+
+<script>
+    const btnNuevoPago = document.getElementById("btn-nuevo-pago");
+    const inputContratoEnvio = document.getElementById("ContratoId");
+    inputContratoEnvio.value = @Contrato.Id;
+
+    console.log(inputContratoEnvio)
+
+    btnNuevoPago.addEventListener("click", () => {
+        datosExtra(@Contrato.Id) 
+    });
+
+
+    //Metodo para cargar monto y numero de pago
+    function datosExtra(id) {
+        fetch(`../DatosExtra/${id}`)
+            .then(response => response.json())
+            .then(data => {
+                document.querySelector("#NumeroPago").value = data.siguienteNumeroPago;
+                document.querySelector("#MontoPago").value = data.monto;
+            })
+            .catch(error => console.error(error));
+    }
+    //-----
+</script>
+
+<script src="~/js/CreatePago.js" type="module"></script>

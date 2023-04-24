@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Inmobiliaria.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Inmobiliaria.Controllers
@@ -60,6 +61,26 @@ namespace Inmobiliaria.Controllers
                 return View();
             }
         }
+        
+        // POST: Pagos/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CreateTwo(Pago p, int contratoId)
+        {
+            try
+            {
+                Repo.Alta(p);
+
+                return RedirectToAction("ListPagosContrato", "Pagos", new { id = contratoId });
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return View();
+            }
+        }
+
+
 
         // GET: Pagos/Edit/5
         public ActionResult Edit(int idPago, int idContrato)
@@ -105,7 +126,7 @@ namespace Inmobiliaria.Controllers
 
                 return RedirectToAction(nameof(Index));
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Console.WriteLine(e);
                 return View();
@@ -120,6 +141,21 @@ namespace Inmobiliaria.Controllers
             var datos = Repo.GetDatosExtra(id);
 
             return datos;
+        }
+
+
+        public ActionResult ListPagosContrato(int id)
+        {
+            try
+            {
+                var list = Repo.PagosContrato(id);
+                ViewBag.Contrato = RepoContrato.GetContrato(id);
+                return View(list);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
     }
 }

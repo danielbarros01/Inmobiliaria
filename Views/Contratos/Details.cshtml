@@ -68,7 +68,7 @@
     </div>
 
     <div class="bottom-contrato d-flex justify-content-center">
-        @Html.ActionLink("Ver Pagos", "ListPagosContrato", "Contratos", new { id = Model.Id }, new { @class = "btn btn-primary"})
+        @Html.ActionLink("Ver Pagos", "ListPagosContrato", "Pagos", new { id = Model.Id }, new { @class = "btn btn-primary"})
         @Html.ActionLink("Renovar contrato", "RenovarContrato", "Contratos", new { id = Model.Id }, new { @class = "btn btn-primary"})
         @Html.ActionLink("Editar", "Edit", "Contratos", new { id = Model.Id }, new { @class = "btn btn-warning"})
         @Html.ActionLink("Cancelar contrato", "CancelarContrato", "Contratos", new { id = Model.Id }, new { @class = "btn btn-danger"})

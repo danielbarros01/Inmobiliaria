@@ -88,6 +88,37 @@ public class RepositorioPago
         return res;
     }
 
+    public int Alta(Pago p, int ContratoId)
+    {
+        int res = 0;
+
+        using (var connection = new MySqlConnection(connectionString))
+        {
+
+            /* SELECT COALESCE se almacena en una tabla temporal t y luego se utiliza el valor de NumeroPago de esa tabla temporal en la cláusula VALUES. */
+            string query = @"
+            INSERT INTO pagos (contrato_Id, NumeroPago, Fecha)
+            VALUES (@ContratoId,
+            (SELECT NumeroPago FROM (SELECT COALESCE(MAX(NumeroPago), 0) + 1 AS NumeroPago FROM pagos WHERE contrato_Id = @ContratoId) t),
+            @Fecha);
+            ";
+
+            using (MySqlCommand command = new MySqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@ContratoId", ContratoId);
+                command.Parameters.AddWithValue("@Fecha", p.Fecha);
+                connection.Open();
+
+                res = Convert.ToInt32(command.ExecuteScalar());
+                p.NumeroPago = res;
+
+                connection.Close();
+            }
+        }
+        return res;
+    }
+
+
     public Pago GetPago(int idPago, int idContrato)
     {
         Pago? res = null;
@@ -219,4 +250,55 @@ public class RepositorioPago
         return data;
     }
 
+    
+    public List<Pago> PagosContrato(int idContrato)
+    {
+        var list = new List<Pago>();
+        using (var conn = new MySqlConnection(connectionString))
+        {
+            var query = @"
+            SELECT NumeroPago,Fecha,contrato_Id, inq.Nombre, inq.Apellido, inmb.Direccion, tiposInmb.Tipo
+            FROM pagos
+            INNER JOIN contratos c  ON contrato_Id = c.Id
+            INNER JOIN inquilinos inq ON c.inquilino_Id = inq.Id
+            INNER JOIN inmuebles inmb ON c.inmueble_Id = inmb.Id
+            INNER JOIN tipos_inmueble tiposInmb ON inmb.tipo_inmueble_Id = tiposInmb.Id
+            WHERE contrato_Id = @Id";
+
+            using (var command = new MySqlCommand(query, conn))
+            {
+                command.Parameters.AddWithValue("@Id", idContrato);
+                conn.Open();
+                using (var reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        Pago pago = new Pago
+                        {
+                            NumeroPago = reader.GetInt32(nameof(Pago.NumeroPago)),
+                            Fecha = reader.GetDateTime(nameof(Pago.Fecha)),
+                            ContratoId = reader.GetInt32("contrato_Id"),
+                            Contrato = new Contrato{
+                                Id = reader.GetInt32("contrato_Id"),
+                                Inquilino = new Inquilino{
+                                    Nombre = reader.GetString(nameof(Inquilino.Nombre)),
+                                    Apellido = reader.GetString(nameof(Inquilino.Apellido))
+                                },
+                                Inmueble = new Inmueble{
+                                    Direccion = reader.GetString(nameof(Inmueble.Direccion)),
+                                    Tipo = new TipoInmueble{
+                                        Tipo = reader.GetString(nameof(TipoInmueble.Tipo))
+                                    }
+                                }
+                            }
+                        };
+
+                        list.Add(pago);
+                    }
+                }
+                conn.Close();
+            }
+        }
+        return list;
+    }
 }

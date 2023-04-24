@@ -57,12 +57,19 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
+
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllerRoute(
         name: "login",
         pattern: "Login",
         defaults: new { controller = "Usuarios", action = "Login" });
+
+    endpoints.MapControllerRoute(
+        name: "ListPagosContrato",
+        pattern: "Pagos/ListPagosContrato/{id?}",
+        defaults: new { controller = "Pagos", action = "ListPagosContrato" }
+    );
 });
 
 
