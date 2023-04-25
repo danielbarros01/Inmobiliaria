@@ -6,86 +6,104 @@
     var TiposInmueble = (IList<TipoInmueble>)ViewBag.TiposInmueble;
 }
 
-<h1>Editar</h1>
 
-<h4>Inmueble</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Id" class="control-label"></label>
-                <input asp-for="Id" class="form-control" disabled/>
-                <span asp-validation-for="Id" class="text-danger"></span>
-            </div>
+<head>
+    <style>
+        label{
+            margin-top: 1rem;
+            font-size: 1.3rem;
+        }
 
-            <div class="form-group">
-                <label class="control-label">Tipo de Inmueble</label>
-                <select class="form-control" name="Tipo.Id">
-                    @foreach (var item in TiposInmueble)
-                    {
-                        if(item.Tipo == Model.Tipo.Tipo){
-                            <option selected value="@item.Id">@item.Tipo</option>
-                        }else{
-                            <option  value="@item.Id">@(item.Tipo)</option>
-                        }
-                        
-                    }
-                </select>
-                <span asp-validation-for="Tipo" class="text-danger"></span>
-            </div>
 
-            <div class="form-group">
-                <label asp-for="Direccion" class="control-label"></label>
-                <input asp-for="Direccion" class="form-control" />
-                <span asp-validation-for="Direccion" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Uso" class="control-label"></label>
-                <input asp-for="Uso" class="form-control" />
-                <span asp-validation-for="Uso" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Cantidad_ambientes" class="control-label"></label>
-                <input asp-for="Cantidad_ambientes" class="form-control" min="1"/>
-                <span asp-validation-for="Cantidad_ambientes" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Coordenadas" class="control-label"></label>
-                <input asp-for="Coordenadas" class="form-control" />
-                <span asp-validation-for="Coordenadas" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Precio" class="control-label"></label>
-                <input asp-for="Precio" class="form-control" />
-                <span asp-validation-for="Precio" class="text-danger"></span>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="Disponible" /> @Html.DisplayNameFor(model => model.Disponible)
-                </label>
-            </div>
+        input, select, option{
+            font-size: 1.4rem !important;
+        }
 
-            <div class="form-group">
-                <label class="control-label">Propietario</label>
-                <select class="form-control" name="Propietario.Id">
-                    @foreach (var item in Propietarios)
-                    {
-                          @:<option @(item.Id == Model.PropietarioId ? "selected" : "") value=" @item.Id">@(item.Nombre + " " + item.Apellido)</option>
-                    }
-                </select>
-                <span asp-validation-for="Propietario" class="text-danger"></span>
-            </div>
+        input[type="submit"]{
+            margin: 1rem;
+            width: 10rem;
+            font-size: 1.5rem;
+        }
+    </style>
+</head>
 
-            <div class="form-group">
-                <input type="submit" value="Guardar" class="btn btn-primary" />
-            </div>
-        </form>
+<a asp-action="Index" class="btn-volver"><i class="fa-solid fa-arrow-left"></i></a>
+
+<div class="container">
+    <div class="header-container text-center">
+        <h1>Editar inmueble <span>Nº @Model.Id</span></h1>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Volver</a>
+<div class="d-flex flex-md-row justify-content-center">
+    <form asp-action="Edit" class="col-md-8">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="form-group">
+            <label class="control-label">Tipo de Inmueble</label>
+            <select class="form-control" name="Tipo.Id">
+                @foreach (var item in TiposInmueble)
+                {
+                    if(item.Tipo == Model.Tipo.Tipo){
+                        <option selected value="@item.Id">@item.Tipo</option>
+                    }else{
+                        <option  value="@item.Id">@(item.Tipo)</option>
+                    }
+                    
+                }
+            </select>
+            <span asp-validation-for="Tipo" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Direccion" class="control-label"></label>
+            <input asp-for="Direccion" class="form-control" required/>
+            <span asp-validation-for="Direccion" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Coordenadas" class="control-label"></label>
+            <input asp-for="Coordenadas" class="form-control" required/>
+            <span asp-validation-for="Coordenadas" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Uso" class="control-label">Uso</label>
+                <select name="Uso" class="form-control">
+                    @foreach (var kvp in (IDictionary<int, string>)ViewBag.Usos)
+                    {
+                        @:<option @(kvp.Key==Model.Uso ? "selected" : "") value="@kvp.Key">@kvp.Value</option>
+                    }
+                </select>
+            <span asp-validation-for="Uso" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Cantidad_ambientes" class="control-label"></label>
+            <input asp-for="Cantidad_ambientes" class="form-control" min="1" required/>
+            <span asp-validation-for="Cantidad_ambientes" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Precio" class="control-label"></label>
+            <input asp-for="Precio" class="form-control" required/>
+            <span asp-validation-for="Precio" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label">Propietario</label>
+            <select class="form-control" name="Propietario.Id">
+                @foreach (var item in Propietarios)
+                {
+                        @:<option @(item.Id == Model.PropietarioId ? "selected" : "") value=" @item.Id">@(item.Nombre + " " + item.Apellido)</option>
+                }
+            </select>
+            <span asp-validation-for="Propietario" class="text-danger"></span>
+        </div>
+
+        <div class="form-group text-center">
+            <input type="submit" value="Guardar" class="btn btn-primary" />
+        </div>
+    </form>
 </div>
 

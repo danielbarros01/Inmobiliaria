@@ -48,6 +48,8 @@ namespace Inmobiliaria.Controllers
         {
             ViewBag.Propietarios = RepoPropietarios.GetPropietarios();
             ViewBag.TiposInmueble = RepoTipoInmueble.GetTipos();
+            ViewBag.Usos = Inmueble.ObtenerUsos();
+
             return View();
         }
 
@@ -77,6 +79,8 @@ namespace Inmobiliaria.Controllers
             ViewBag.Propietarios = RepoPropietarios.GetPropietarios(); //dato anexo, no se pasa en View porque es justamente anexo a Inmueble, el ViewBag le metemos lo que queremos y se pasa al otro lado
             ViewBag.TiposInmueble = RepoTipoInmueble.GetTipos();
             //ViewData["Propietarios"] = RepoPropietarios.GetPropietarios(); //lo mismo de arriba pero tipo diccionario
+            ViewBag.Usos = Inmueble.ObtenerUsos();
+            
             return View(inm);
         }
 
@@ -140,5 +144,16 @@ namespace Inmobiliaria.Controllers
 
             return View("Index", datos);
         }
+
+        // GET: Inmuebles/VerInmueblesPorPropietario
+        [HttpGet]
+        public ActionResult VerInmueblesPorPropietario(int idPropietario)
+        {
+            var datos = Repo.GetInmueblesPropietario(idPropietario);
+            ViewBag.FiltroPropietario = true;
+
+            return View("Index", datos);
+        }
+
     }
 }

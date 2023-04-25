@@ -248,4 +248,58 @@ public class RepositorioInmueble
         }
         return list;
     }
+
+    public List<Inmueble> GetInmueblesPropietario(int idPropietario)
+    {
+        var list = new List<Inmueble>();
+
+        using (var conn = new MySqlConnection(connectionString))
+        {
+            var query = @"
+            SELECT i.Id, i.Direccion, i.Uso, i.Cantidad_ambientes, i.Coordenadas, i.Precio, i.Disponible, i.propietario_Id, p.nombre, p.Apellido, p.Telefono, t.Tipo
+            FROM inmuebles i
+            INNER JOIN propietarios p ON i.propietario_id = p.Id
+            INNER JOIN tipos_inmueble t ON i.tipo_inmueble_Id = t.Id
+            WHERE p.Id = @IdPropietario;";
+
+            using (var command = new MySqlCommand(query, conn))
+            {
+                command.Parameters.AddWithValue("@IdPropietario", idPropietario);
+                conn.Open();
+                using (var reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        Inmueble inmueble = new Inmueble
+                        {
+                            Id = reader.GetInt32(nameof(Inmueble.Id)),
+                            Direccion = reader.GetString(nameof(Inmueble.Direccion)),
+                            Uso = reader.GetInt32(nameof(Inmueble.Uso)),
+                            Cantidad_ambientes = reader.GetInt32(nameof(Inmueble.Cantidad_ambientes)),
+                            Coordenadas = reader.GetString(nameof(Inmueble.Coordenadas)),
+                            Precio = reader.GetDecimal(nameof(Inmueble.Precio)),
+                            Disponible = reader.GetBoolean(nameof(Inmueble.Disponible)),
+                            PropietarioId = reader.GetInt32("propietario_Id"),
+                            Propietario = new Propietario
+                            {
+                                Id = reader.GetInt32("propietario_Id"),
+                                Nombre = reader.GetString(nameof(Inmueble.Propietario.Nombre)),
+                                Apellido = reader.GetString(nameof(Inmueble.Propietario.Apellido)),
+                                Telefono = reader.GetString(nameof(Inmueble.Propietario.Telefono))
+                            },
+                            Tipo = new TipoInmueble
+                            {
+                                Id = reader.GetInt32(nameof(Inmueble.Tipo.Id)),/* No devuelve el verdadero Id */
+                                Tipo = reader.GetString(nameof(Inmueble.Tipo.Tipo)),
+                            }
+                        };
+
+                        list.Add(inmueble);
+                    }
+                }
+                conn.Close();
+            }
+        }
+        return list;
+    }
 }

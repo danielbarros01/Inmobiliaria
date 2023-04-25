@@ -11,11 +11,17 @@
             action = "Index";
             p = "Ver todos";
         }
-        }else{
-        @* Si no ... *@
-            action = "Disponibles";
-            p = "Inmuebles disponibles";
+    }
+    else if(ViewBag.FiltroPropietario != null){
+        if(ViewBag.FiltroPropietario){
+            action = "Index";
+            p = "Ver todos";
         }
+    }else{
+    @* Si no ... *@
+        action = "Disponibles";
+        p = "Inmuebles disponibles";
+    }
 }
 
 <head>

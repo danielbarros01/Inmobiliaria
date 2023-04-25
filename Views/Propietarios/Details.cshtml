@@ -50,5 +50,6 @@
 </div>
 <div>
     @Html.ActionLink("Editar", "Edit", new {id = Model.Id  }) |
+    @Html.ActionLink("Ver Inmuebles", "VerInmueblesPorPropietario", "Inmuebles", new { idPropietario = Model.Id }, null)|
     <a asp-action="Index">Volver</a>
 </div>
