@@ -188,7 +188,9 @@ public class RepositorioContrato
         int res = 0;
 
         using (var conn = new MySqlConnection(connectionString)){
-            string query = "DELETE FROM contratos where Id = @Id";
+            string query = @"
+                UPDATE inmuebles SET Disponible = 1 WHERE id = (SELECT inmueble_Id FROM contratos WHERE Id = @Id);
+                DELETE FROM contratos where Id = @Id;";
 
             using(var command = new MySqlCommand(query, conn)){
                 command.Parameters.AddWithValue("@Id", id);
