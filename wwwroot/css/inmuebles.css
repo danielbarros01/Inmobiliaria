@@ -51,3 +51,25 @@
     margin-bottom: 1rem;
 }
 
+.form-filtro-fechas{
+    width: 100%;
+    height: 16rem;
+    font-size: 1.3rem;
+}
+
+.form-filtro-fechas label{
+    display: block;
+    margin-top: 1rem;
+    font-weight: bold;
+}
+
+.form-filtro-fechas input[type="date"]{
+    width: 15rem;
+    text-align: center;
+}
+
+.form-filtro-fechas input[type="submit"]{
+    font-size: 1.4rem;
+    width: 6.6rem;
+    margin-top: 1rem;
+}

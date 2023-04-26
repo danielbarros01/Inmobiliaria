@@ -302,4 +302,69 @@ public class RepositorioInmueble
         }
         return list;
     }
+
+    public List<Inmueble> GetInmueblesPorFechas(DateTime fechaInicio, DateTime fechaFinal){
+        var list = new List<Inmueble>();
+
+        using (var conn = new MySqlConnection(connectionString))
+        {
+
+        /* se utiliza una subconsulta que busca los contratos que se superponen con las fechas del nuevo contrato. 
+        En esta subconsulta, se busca cualquier contrato que se solape con las fechas especificadas 
+        La subconsulta devuelve una lista de los ID de los inmuebles que están ocupados durante el período especificado. 
+        Luego, se utiliza la cláusula "NOT IN" para seleccionar todos los inmuebles que no estén en esa lista.*/
+
+            var query = @"
+            SELECT i.Id, i.Direccion, i.Uso, i.Cantidad_ambientes, i.Coordenadas, i.Precio, i.Disponible, i.propietario_Id, p.nombre, p.Apellido, p.Telefono, t.Tipo
+            FROM inmuebles i
+            INNER JOIN propietarios p ON i.propietario_id = p.Id
+            INNER JOIN tipos_inmueble t ON i.tipo_inmueble_Id = t.Id
+            WHERE i.Disponible = 1 
+            OR i.Id NOT IN (
+                SELECT c.inmueble_Id
+                FROM contratos c
+                WHERE (c.Desde <= @parametroHasta AND c.Hasta >= @parametroDesde) 
+                OR (c.Desde >= @parametroDesde AND c.Hasta <= @parametroHasta) 
+                OR (c.Desde <= @parametroDesde AND c.Hasta >= @parametroDesde)
+            )";
+
+            using (var command = new MySqlCommand(query, conn))
+            {
+                command.Parameters.AddWithValue("@parametroDesde", fechaInicio);
+                command.Parameters.AddWithValue("@parametroHasta", fechaFinal); 
+                conn.Open();
+                using (var reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        Inmueble inmueble = new Inmueble
+                        {
+                            Id = reader.GetInt32(nameof(Inmueble.Id)),
+                            Direccion = reader.GetString(nameof(Inmueble.Direccion)),
+                            Uso = reader.GetInt32(nameof(Inmueble.Uso)),
+                            Cantidad_ambientes = reader.GetInt32(nameof(Inmueble.Cantidad_ambientes)),
+                            Coordenadas = reader.GetString(nameof(Inmueble.Coordenadas)),
+                            Precio = reader.GetDecimal(nameof(Inmueble.Precio)),
+                            Disponible = reader.GetBoolean(nameof(Inmueble.Disponible)),
+                            PropietarioId = reader.GetInt32("propietario_Id"),
+                            Propietario = new Propietario
+                            {
+                                Nombre = reader.GetString(nameof(Inmueble.Propietario.Nombre)),
+                                Apellido = reader.GetString(nameof(Inmueble.Propietario.Apellido))
+                            },
+                            Tipo = new TipoInmueble
+                            {
+                                Id = reader.GetInt32(nameof(Inmueble.Tipo.Id)),/* No devuelve el verdadero Id */
+                                Tipo = reader.GetString(nameof(Inmueble.Tipo.Tipo)),
+                            }
+                        };
+
+                        list.Add(inmueble);
+                    }
+                }
+                conn.Close();
+            }
+        }
+        return list;
+    }
 }

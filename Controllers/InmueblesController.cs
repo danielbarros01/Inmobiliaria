@@ -155,5 +155,21 @@ namespace Inmobiliaria.Controllers
             return View("Index", datos);
         }
 
+        // GET: Inmuebles/FiltrarPorFechas
+        [HttpGet]
+        public ActionResult FiltrarPorFechas(DateTime fechaDesde, DateTime fechaHasta)
+        {
+            var datos = Repo.GetInmueblesPorFechas(fechaDesde, fechaHasta);
+            ViewBag.FiltroFechas = true;
+            ViewBag.Fechas = 
+            new {
+                fechaDesde = fechaDesde.ToString("dd/MM/yyyy"), 
+                fechaHasta = fechaHasta.ToString("dd/MM/yyyy")
+                };
+            ViewBag.NumeroDeInmuebles = datos.Count();
+
+            return View("Index", datos);
+        }
+
     }
 }

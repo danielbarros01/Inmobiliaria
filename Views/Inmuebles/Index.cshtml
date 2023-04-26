@@ -17,6 +17,11 @@
             action = "Index";
             p = "Ver todos";
         }
+    }else if(ViewBag.FiltroFechas != null){
+        if(ViewBag.FiltroFechas){
+            action = "Index";
+            p = "Ver todos";
+        }
     }else{
     @* Si no ... *@
         action = "Disponibles";
@@ -42,9 +47,18 @@
         </button>
         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
             <li><a class="dropdown-item" asp-controller="Inmuebles" asp-action=@action>@p</a></li>
+            @if(ViewBag.FiltroFechas == null){
+                <li><a class="dropdown-item" asp-controller="Inmuebles" asp-action="InmueblesPorFecha" data-toggle="modal" data-target="#modalFechas">Disponibles por fechas</a></li>
+            }
         </ul>
     </div>
 </div>
+
+@if(ViewBag.FiltroFechas != null && ViewBag.FiltroFechas){
+    <div>
+        <p>Inmuebles disponibles entre el @ViewBag.Fechas.fechaDesde y @ViewBag.Fechas.fechaHasta</p>
+    </div>
+}
 
 @if(ViewBag.NumeroDeInmuebles != null && ViewBag.NumeroDeInmuebles == 0){
     <div class="container-sin-datos d-flex align-items-center justify-content-center">
@@ -80,4 +94,35 @@
   </div>
 </div>
 
+
+
+<!-- Modal -->
+<div class="modal" id="modalFechas" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-fechas" role="document">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">Filtrar por fechas</h5>
+        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+        <form action="/Inmuebles/FiltrarPorFechas" class="form-filtro-fechas d-flex align-items-center flex-column justify-content-space-between">
+            <div>
+                <label for="">Desde</label>
+                <input type="date" name="fechaDesde" id="fechaDesde" required>
+            </div>
+            <div>
+                <label for="">Hasta</label>
+                <input type="date" name="fechaHasta" id="fechaHasta" required>
+            </div>
+            <div class="modal-footer">
+                <input type="submit" class="btn btn-primary" value="Filtrar"/>
+            </div>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>
 
