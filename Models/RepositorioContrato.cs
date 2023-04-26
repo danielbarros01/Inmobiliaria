@@ -232,10 +232,8 @@ public class RepositorioContrato
         using (var conn = new MySqlConnection(connectionString))
         {
             var query = @"
-            SELECT c.Id
-            FROM inmobiliaria.contratos c
-            INNER JOIN inmuebles inm ON c.inmueble_Id = inm.Id
-            WHERE inm.Id = @Id;";
+            SELECT * FROM inmobiliaria.contratos c
+            WHERE c.inmueble_Id = @Id AND c.Desde <= CURDATE() AND c.Hasta >= CURDATE()";
 
             using (var command = new MySqlCommand(query, conn))
             {
@@ -384,8 +382,7 @@ public class RepositorioContrato
         using (var conn = new MySqlConnection(connectionString))
         {
             var query = @"SELECT * FROM inmobiliaria.contratos c
-            WHERE inmueble_Id = @InmuebleId AND Hasta >= CURDATE() 
-            AND c.Id = (SELECT Id FROM contratos c2 WHERE c2.inmueble_Id = c.inmueble_Id AND c2.Hasta >= CURDATE() ORDER BY c2.Hasta ASC LIMIT 1);";
+                WHERE c.inmueble_Id = @InmuebleId AND c.Desde <= CURDATE() AND c.Hasta >= CURDATE()";
 
             using (var command = new MySqlCommand(query, conn))
             {

@@ -38,11 +38,18 @@ namespace Inmobiliaria.Controllers
         // GET: Inmuebles/Details/5
         public ActionResult Details(int id)
         {
-            var inm = Repo.GetInmueble(id);
-            ViewBag.Contrato = RepoContratos.obtenerIdPorInmueble(id);
-            ViewBag.Disponible = RepoContratos.GetContratoVigentePorInmueble(id);   
-            
-            return View(inm);
+            try
+            {
+                var inm = Repo.GetInmueble(id);
+                ViewBag.Contrato = RepoContratos.obtenerIdPorInmueble(id);
+                ViewBag.Disponible = RepoContratos.GetContratoVigentePorInmueble(id);
+
+                return View(inm);
+            }
+            catch (System.Exception)
+            {
+                throw;
+            }
         }
 
         // GET: Inmuebles/Create
@@ -64,7 +71,7 @@ namespace Inmobiliaria.Controllers
             {
                 // TODO: Add insert logic here
                 Repo.Alta(inmueble);
-                TempData["Mensaje"] =  $"Inmueble con direccion {inmueble.Direccion} y ID {inmueble.Id} creado!";
+                TempData["Mensaje"] = $"Inmueble con direccion {inmueble.Direccion} y ID {inmueble.Id} creado!";
 
                 return RedirectToAction(nameof(Index));
             }
@@ -82,7 +89,7 @@ namespace Inmobiliaria.Controllers
             ViewBag.TiposInmueble = RepoTipoInmueble.GetTipos();
             //ViewData["Propietarios"] = RepoPropietarios.GetPropietarios(); //lo mismo de arriba pero tipo diccionario
             ViewBag.Usos = Inmueble.ObtenerUsos();
-            
+
             return View(inm);
         }
 
@@ -92,9 +99,9 @@ namespace Inmobiliaria.Controllers
         public ActionResult Edit(int id, Inmueble inmueble)
         {
             try
-            {        
+            {
                 Repo.Modificar(inmueble);
-                TempData["Mensaje"] =  $"Inmueble con {inmueble.Direccion} y ID {inmueble.Id} modificado!";
+                TempData["Mensaje"] = $"Inmueble con {inmueble.Direccion} y ID {inmueble.Id} modificado!";
 
                 return RedirectToAction(nameof(Index));
             }
@@ -121,11 +128,11 @@ namespace Inmobiliaria.Controllers
             try
             {
                 Repo.Eliminar(id);
-                TempData["Mensaje"] =  $"Inmueble con direccion {inmueble.Direccion} con ID {inmueble.Id} eliminado!";
+                TempData["Mensaje"] = $"Inmueble con direccion {inmueble.Direccion} con ID {inmueble.Id} eliminado!";
 
                 return RedirectToAction(nameof(Index));
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 TempData["Error"] = $"Error: {e.Message}";
                 return RedirectToAction(nameof(Index));
@@ -163,11 +170,12 @@ namespace Inmobiliaria.Controllers
         {
             var datos = Repo.GetInmueblesPorFechas(fechaDesde, fechaHasta);
             ViewBag.FiltroFechas = true;
-            ViewBag.Fechas = 
-            new {
-                fechaDesde = fechaDesde.ToString("dd/MM/yyyy"), 
+            ViewBag.Fechas =
+            new
+            {
+                fechaDesde = fechaDesde.ToString("dd/MM/yyyy"),
                 fechaHasta = fechaHasta.ToString("dd/MM/yyyy")
-                };
+            };
             ViewBag.NumeroDeInmuebles = datos.Count();
 
             return View("Index", datos);
