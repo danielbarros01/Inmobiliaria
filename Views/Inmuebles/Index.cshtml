@@ -46,6 +46,13 @@
     </div>
 </div>
 
+@if(ViewBag.NumeroDeInmuebles != null && ViewBag.NumeroDeInmuebles == 0){
+    <div class="container-sin-datos d-flex align-items-center justify-content-center">
+        <p>No hay inmuebles que mostrar</p>
+    </div>
+}
+
+
 <div class="container-fluid">
   <div class="row justify-content-evenly">
     @foreach (var item in Model) {

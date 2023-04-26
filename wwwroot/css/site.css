@@ -43,3 +43,12 @@ a {
 .btn-volver{
   font-size: 1.6rem;
 }
+
+.container-sin-datos{
+    height: 20vh;
+    background-color: aliceblue;
+    font-size: 1.5rem;
+    border: 2px solid rgb(231, 106, 106);
+    border-radius: 20px;
+
+}

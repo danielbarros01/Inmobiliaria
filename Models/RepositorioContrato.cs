@@ -184,15 +184,18 @@ public class RepositorioContrato
         return res;
     }
 
-    public int Eliminar(int id){
+    public int Eliminar(int id)
+    {
         int res = 0;
 
-        using (var conn = new MySqlConnection(connectionString)){
+        using (var conn = new MySqlConnection(connectionString))
+        {
             string query = @"
                 UPDATE inmuebles SET Disponible = 1 WHERE id = (SELECT inmueble_Id FROM contratos WHERE Id = @Id);
                 DELETE FROM contratos where Id = @Id;";
 
-            using(var command = new MySqlCommand(query, conn)){
+            using (var command = new MySqlCommand(query, conn))
+            {
                 command.Parameters.AddWithValue("@Id", id);
                 conn.Open();
                 res = command.ExecuteNonQuery();
@@ -233,4 +236,61 @@ public class RepositorioContrato
         }
         return res;
     }
+
+    public List<Contrato> GetContratosInmueble(int idInmueble)
+    {
+        var list = new List<Contrato>();
+
+        using (var connection = new MySqlConnection(connectionString))
+        {
+            string query = @"
+            SELECT c.Id,Desde,Hasta,Condiciones,Monto, inm.Id as InmuebleId ,inm.Direccion, tipos.Tipo, inq.Id as InquilinoId ,inq.Nombre, inq.Apellido
+            FROM inmobiliaria.contratos c
+            INNER JOIN inmuebles inm ON c.inmueble_Id = inm.Id
+            INNER JOIN inquilinos inq ON c.inquilino_Id = inq.Id
+            INNER JOIN tipos_inmueble tipos ON inm.tipo_inmueble_Id = tipos.Id
+            WHERE inm.Id = @InmuebleId";
+
+            using (var command = new MySqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@InmuebleId", idInmueble);
+                connection.Open();
+                using (var reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        Contrato contrato = new Contrato
+                        {
+                            Id = reader.GetInt32(nameof(contrato.Id)),
+                            Desde = reader.GetDateTime(nameof(contrato.Desde)),
+                            Hasta = reader.GetDateTime(nameof(contrato.Hasta)),
+                            Condiciones = reader.GetString(nameof(contrato.Condiciones)),
+                            Monto = reader.GetDecimal(nameof(contrato.Monto)),
+                            InmuebleId = reader.GetInt32(nameof(contrato.InmuebleId)),
+                            InquilinoId = reader.GetInt32(nameof(contrato.InquilinoId)),
+                            Inmueble = new Inmueble
+                            {
+                                Direccion = reader.GetString(nameof(Inmueble.Direccion)),
+                                Tipo = new TipoInmueble
+                                {
+                                    Tipo = reader.GetString(nameof(TipoInmueble.Tipo)),
+                                }
+                            },
+                            Inquilino = new Inquilino
+                            {
+                                Nombre = reader.GetString(nameof(Inquilino.Nombre)),
+                                Apellido = reader.GetString(nameof(Inquilino.Apellido))
+                            }
+                        };
+
+                        list.Add(contrato);
+                    }
+                }
+                connection.Close();
+            }
+
+        }
+        return list;
+    }
+
 }

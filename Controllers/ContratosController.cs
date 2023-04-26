@@ -136,5 +136,14 @@ namespace Inmobiliaria.Controllers
                 return View();
             }
         }
+
+        // GET: Inmuebles/ContratosPorInmueble/?
+        [HttpGet]
+        public ActionResult ContratosPorInmueble(int idInmueble){
+            var datos = Repo.GetContratosInmueble(idInmueble);
+            ViewBag.FiltroInmueble = true;
+            ViewBag.NumeroDeContratos = datos.Count();
+            return View("Index", datos);
+        }
     }
 }

@@ -151,7 +151,7 @@ namespace Inmobiliaria.Controllers
         {
             var datos = Repo.GetInmueblesPropietario(idPropietario);
             ViewBag.FiltroPropietario = true;
-
+            ViewBag.NumeroDeInmuebles = datos.Count();
             return View("Index", datos);
         }
 
