@@ -35,15 +35,17 @@ namespace Inmobiliaria.Controllers
         // GET: Contratos/Details/5
         public ActionResult Details(int id)
         {
-            var contrato = Repo.GetContrato(id);
-            return View(contrato);
-        }
+            try
+            {
+                var contrato = Repo.GetContrato(id);
+                ViewBag.Multa = TempData["Multa"];
 
-        // GET: Contratos/Details2/5
-        public ActionResult Details2(int id)
-        {
-            var contrato = Repo.GetContrato(id);
-            return View(contrato);
+                return View(contrato);
+            }
+            catch (System.Exception)
+            {
+                throw;
+            }
         }
 
         // GET: Contratos/Create
@@ -139,7 +141,8 @@ namespace Inmobiliaria.Controllers
 
         // GET: Inmuebles/ContratosPorInmueble/?
         [HttpGet]
-        public ActionResult ContratosPorInmueble(int idInmueble){
+        public ActionResult ContratosPorInmueble(int idInmueble)
+        {
             var datos = Repo.GetContratosInmueble(idInmueble);
             ViewBag.FiltroInmueble = true;
             ViewBag.NumeroDeContratos = datos.Count();
@@ -148,11 +151,23 @@ namespace Inmobiliaria.Controllers
 
         // GET: Inmuebles/ContratosVigentes
         [HttpGet]
-        public ActionResult ContratosVigentes(){
+        public ActionResult ContratosVigentes()
+        {
             var datos = Repo.GetContratosVigentes();
             ViewBag.FiltroVigentes = true;
             ViewBag.NumeroDeContratos = datos.Count();
             return View("Index", datos);
+        }
+
+        // POST: Inmuebles/ContratosVigentes
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CancelarContrato(int id)
+        {
+            var datos = Repo.CancelarContrato(id);
+            TempData["Multa"] = $"Contrato Cancelado, debera pagar una multa";
+
+            return RedirectToAction(nameof(Details), new { id = id });
         }
     }
 }

@@ -14,6 +14,12 @@
 <div class="container-contrato">
     <h2 class="text-center">Contrato Nº @Model.Id</h2>
 
+    @if(ViewBag.Multa != null){
+        <div>
+            <p class="text-danger text-center">@ViewBag.Multa</p>
+        </div>
+    }
+
     <div class="header-contrato row d-flex flex-md-row">
         @*.. Card inmueble ..*@
         <div class="header-inmueble d-flex justify-content-between col-md-8">
@@ -70,8 +76,12 @@
     <div class="bottom-contrato d-flex justify-content-center">
         @Html.ActionLink("Ver Pagos", "ListPagosContrato", "Pagos", new { id = Model.Id }, new { @class = "btn btn-primary"})
         @Html.ActionLink("Renovar contrato", "RenovarContrato", "Contratos", new { id = Model.Id }, new { @class = "btn btn-primary"})
-        @Html.ActionLink("Editar", "Edit", "Contratos", new { id = Model.Id }, new { @class = "btn btn-warning"})
-        @Html.ActionLink("Cancelar contrato", "CancelarContrato", "Contratos", new { id = Model.Id }, new { @class = "btn btn-danger"})
+        @Html.ActionLink("Editar", "Edit", "Contratos", new { id = Model.Id }, new { @class = "btn btn-warning"})    
+        
+        <form asp-controller="Contratos" asp-action="CancelarContrato" method="post">
+            <input name="id" class="form-control" value="@Model.Id" type="hidden">
+            <input type="submit" class="btn btn-danger" value="Cancelar contrato">
+        </form>
     </div>
 
 </div>

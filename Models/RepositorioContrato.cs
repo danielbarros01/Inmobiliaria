@@ -184,6 +184,26 @@ public class RepositorioContrato
         return res;
     }
 
+    public int CancelarContrato(int id){
+        int res = 0;
+        using (var conn = new MySqlConnection(connectionString))
+        {
+            string query = @"
+            UPDATE inmuebles SET Disponible = 1 WHERE id = (SELECT inmueble_Id FROM contratos WHERE Id = @Id);
+            UPDATE contratos SET Hasta=@Hasta WHERE Id = @Id;";
+
+            using (var command = new MySqlCommand(query, conn))
+            {
+                command.Parameters.AddWithValue("@Hasta", DateTime.Now.AddDays(-1));
+                command.Parameters.AddWithValue("@Id", id);
+                conn.Open();
+                res = command.ExecuteNonQuery();
+                conn.Close();
+            }
+        }
+        return res;
+    }
+
     public int Eliminar(int id)
     {
         int res = 0;
