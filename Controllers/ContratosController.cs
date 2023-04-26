@@ -145,5 +145,14 @@ namespace Inmobiliaria.Controllers
             ViewBag.NumeroDeContratos = datos.Count();
             return View("Index", datos);
         }
+
+        // GET: Inmuebles/ContratosVigentes
+        [HttpGet]
+        public ActionResult ContratosVigentes(){
+            var datos = Repo.GetContratosVigentes();
+            ViewBag.FiltroVigentes = true;
+            ViewBag.NumeroDeContratos = datos.Count();
+            return View("Index", datos);
+        }
     }
 }

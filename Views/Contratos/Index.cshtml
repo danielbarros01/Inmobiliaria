@@ -6,13 +6,7 @@
     var action = "";
     var p = "";
 
-    if(ViewBag.FiltroInmueble != null){
-        if(ViewBag.FiltroInmueble){
-        @* Si se activo el filtro por inmueble *@
-            action = "Index";
-            p = "Ver todos";
-        }
-    }
+    
 }
 
 <h1>Seccion de contratos</h1>
@@ -21,16 +15,21 @@
     <a asp-action="Create"><i class="fa-solid fa-square-plus"></i></a>
 </p>
 
-@if(ViewBag.FiltroInmueble != null){
-    <div class="dropdown">
-        <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-            Filtrar
-        </button>
-        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-            <li><a class="dropdown-item" asp-controller="Contratos" asp-action=@action>@p</a></li>
-        </ul>
-    </div>
-}
+
+<div class="dropdown">
+    <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+        Filtrar
+    </button>
+    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+        @if(ViewBag.FiltroInmueble != null && ViewBag.FiltroInmueble || ViewBag.FiltroVigentes != null && ViewBag.FiltroVigentes){
+            <li><a class="dropdown-item" asp-controller="Contratos" asp-action="index">Ver todos</a></li>
+        }else{
+            <li><a class="dropdown-item" asp-controller="Contratos" asp-action="ContratosVigentes">Vigentes</a></li>
+        }
+        
+    </ul>
+</div>
+
 
 
 @if(ViewBag.NumeroDeContratos != null && ViewBag.NumeroDeContratos == 0){

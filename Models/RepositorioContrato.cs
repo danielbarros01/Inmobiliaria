@@ -293,4 +293,67 @@ public class RepositorioContrato
         return list;
     }
 
+    public List<Contrato> GetContratosVigentes(){
+        var list = new List<Contrato>();
+
+        using (var connection = new MySqlConnection(connectionString))
+        {
+
+            /* utilize una subconsulta para obtener el Id del contrato con la fecha de finalización de contrato más cercana 
+            a la fecha actual, para cada inmueble_Id. Luego, en la cláusula principal de la consulta, filtramos los resultados 
+            utilizando la condición c.Id = subconsulta para obtener únicamente los registros que coinciden con los Id obtenidos 
+            en la subconsulta. Finalmente, agrupamos los resultados por inmueble_Id utilizando la cláusula GROUP BY y ordenamos 
+            los resultados por fecha de finalización de contrato. */
+
+            string query = @"
+            SELECT c.Id, Desde, Hasta, Condiciones, Monto, inm.Id as InmuebleId, inm.Direccion, tipos.Tipo, inq.Id as InquilinoId, inq.Nombre, inq.Apellido
+            FROM contratos c
+            INNER JOIN inmuebles inm ON c.inmueble_Id = inm.Id
+            INNER JOIN inquilinos inq ON c.inquilino_Id = inq.Id
+            INNER JOIN tipos_inmueble tipos ON inm.tipo_inmueble_Id = tipos.Id
+            WHERE Hasta >= CURDATE() 
+            AND c.Id = (SELECT Id FROM contratos c2 WHERE c2.inmueble_Id = c.inmueble_Id AND c2.Hasta >= CURDATE() ORDER BY c2.Hasta ASC LIMIT 1)
+            GROUP BY inm.Id
+            ORDER BY Hasta ASC";
+
+            using (var command = new MySqlCommand(query, connection))
+            {
+                connection.Open();
+                using (var reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        Contrato contrato = new Contrato
+                        {
+                            Id = reader.GetInt32(nameof(contrato.Id)),
+                            Desde = reader.GetDateTime(nameof(contrato.Desde)),
+                            Hasta = reader.GetDateTime(nameof(contrato.Hasta)),
+                            Condiciones = reader.GetString(nameof(contrato.Condiciones)),
+                            Monto = reader.GetDecimal(nameof(contrato.Monto)),
+                            InmuebleId = reader.GetInt32(nameof(contrato.InmuebleId)),
+                            InquilinoId = reader.GetInt32(nameof(contrato.InquilinoId)),
+                            Inmueble = new Inmueble
+                            {
+                                Direccion = reader.GetString(nameof(Inmueble.Direccion)),
+                                Tipo = new TipoInmueble
+                                {
+                                    Tipo = reader.GetString(nameof(TipoInmueble.Tipo)),
+                                }
+                            },
+                            Inquilino = new Inquilino
+                            {
+                                Nombre = reader.GetString(nameof(Inquilino.Nombre)),
+                                Apellido = reader.GetString(nameof(Inquilino.Apellido))
+                            }
+                        };
+
+                        list.Add(contrato);
+                    }
+                }
+                connection.Close();
+            }
+
+        }
+        return list;
+    }
 }
