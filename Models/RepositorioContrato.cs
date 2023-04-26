@@ -376,4 +376,59 @@ public class RepositorioContrato
         }
         return list;
     }
+
+    public Boolean GetContratoVigentePorInmueble(int idInmueble){
+
+        var Vigente = false;
+
+        using (var conn = new MySqlConnection(connectionString))
+        {
+            var query = @"SELECT * FROM inmobiliaria.contratos c
+            WHERE inmueble_Id = @InmuebleId AND Hasta >= CURDATE() 
+            AND c.Id = (SELECT Id FROM contratos c2 WHERE c2.inmueble_Id = c.inmueble_Id AND c2.Hasta >= CURDATE() ORDER BY c2.Hasta ASC LIMIT 1);";
+
+            using (var command = new MySqlCommand(query, conn))
+            {
+                command.Parameters.AddWithValue("@InmuebleId", idInmueble);
+                conn.Open();
+                using (var reader = command.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        Vigente = true;
+                    }
+                }
+                conn.Close();
+            }
+        }
+        return Vigente;
+    }
+
+    public Boolean Vigente(int id){
+
+        var Vigente = false;
+
+        using (var conn = new MySqlConnection(connectionString))
+        {
+            var query = @"SELECT * FROM inmobiliaria.contratos c
+            WHERE c.Id = @ContratoId AND Hasta >= CURDATE() 
+            AND c.Id = (SELECT Id FROM contratos c2 WHERE c2.inmueble_Id = c.inmueble_Id AND c2.Hasta >= CURDATE() ORDER BY c2.Hasta ASC LIMIT 1);";
+
+            using (var command = new MySqlCommand(query, conn))
+            {
+                command.Parameters.AddWithValue("@ContratoId", id);
+                conn.Open();
+                using (var reader = command.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        Vigente = true;
+                    }
+                }
+                conn.Close();
+            }
+        }
+        return Vigente;
+    }
+
 }

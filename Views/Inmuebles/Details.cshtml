@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = "Details";
     var Contrato = ViewBag.Contrato;
+
 }
 
 
@@ -21,7 +22,7 @@
         <p><i class="fa-solid fa-location-dot"></i>@Model.Direccion</p>
         
         <div>
-            @if(!Model.Disponible) { 
+            @if(ViewBag.Disponible != null && ViewBag.Disponible) { 
                 <p class="condiciones-contrato">El arrendatario se compromete a mantener la vivienda en buen estado de conservación y limpieza, realizando las reparaciones necesarias en caso de daños ocasionados por su uso o el de sus invitados.No se permitirá la subarrendamiento de la vivienda a terceros sin el consentimiento previo y por escrito del arrendador. En caso de hacerlo, se considerará incumplimiento del contrato y podrá proceder a la rescisión del mismo.</p>
                 <div class="d-inline-block">
                     @Html.ActionLink("Ver Contrato", "Details", "Contratos", new { id = Contrato.Id }, new { @class = "btn btn-primary"})
@@ -36,7 +37,7 @@
 
     <div class="info-foto col-md-6 align-items-center justify-content-center">
         <img class="card-img-top" src="https://www.bbva.com/wp-content/uploads/2021/04/casas-ecolo%CC%81gicas_apertura-hogar-sostenibilidad-certificado-.jpg" alt="Foto del inmueble">  
-        @if(!Model.Disponible) { 
+        @if(ViewBag.Disponible != null && ViewBag.Disponible) { 
             <p class="estado ocupado">Ocupado</p>
         }else{
             <p class="estado disponible">Disponible</p>
@@ -73,7 +74,7 @@
 </div>
 
 <div class="container-botones d-flex flex-column flex-md-row justify-content-center align-items-center">
-    @if(Model.Disponible) { 
+    @if(ViewBag.Disponible != null && !ViewBag.Disponible) { 
         <a href="@Url.Action("Create", "Contratos",  new { idInmueble = @Model.Id })" class="btn btn-success btn-alquilar">
             <i class="fa-solid fa-check-double"></i>Alquilar
         </a>

@@ -16,12 +16,14 @@ namespace Inmobiliaria.Controllers
         private readonly RepositorioContrato Repo;
         private readonly RepositorioInquilino RepoInquilinos;
         private readonly RepositorioInmueble RepoInmuebles;
+        private readonly RepositorioContrato RepoContratos;
 
         public ContratosController()
         {
             Repo = new RepositorioContrato();
             RepoInquilinos = new RepositorioInquilino();
             RepoInmuebles = new RepositorioInmueble();
+            RepoContratos = new RepositorioContrato();
         }
         // GET: Contratos
         public ActionResult Index()
@@ -168,6 +170,16 @@ namespace Inmobiliaria.Controllers
             TempData["Multa"] = $"Contrato Cancelado, debera pagar una multa";
 
             return RedirectToAction(nameof(Details), new { id = id });
+        }
+
+
+        // GET: Contratos/Vigente
+        [HttpGet]
+        public Object Vigente(int idInmueble)
+        {
+            var fechas = Repo.GetContratoVigentePorInmueble(idInmueble);
+
+            return fechas;
         }
     }
 }

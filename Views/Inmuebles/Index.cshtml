@@ -71,13 +71,8 @@
   <div class="row justify-content-evenly">
     @foreach (var item in Model) {
         <div class="col-sm-6 col-md-4 col-lg-3 card-inmueble">
-            
-            <div class="card_header">
-                @if(item.Disponible){
-                    <p class="estado disponible">Disponible</p>
-                }else{
-                    <p class="estado ocupado">Ocupado</p>
-                }
+            <div class="card_header" data-id="@item.Id">
+                <p class="estado disponible" id="estado">Procesando...</p>
                 <img class="card-img-top" src="https://www.bbva.com/wp-content/uploads/2021/04/casas-ecolo%CC%81gicas_apertura-hogar-sostenibilidad-certificado-.jpg" alt="Foto del inmueble">
             </div>
 
@@ -88,13 +83,38 @@
                 <p><i class="fa-solid fa-hand-holding-dollar"></i>@item.Precio</p>
                 @Html.ActionLink("Ver", "Details", new {id=item.Id },  new { @class = "fa-solid fa-eye enlace-detalles" })
             </div>
-
         </div>
+
+        <script>
+            (async function verificarContratoVigente(idInmueble) {
+                try {
+                    const response = await fetch(`/Contratos/Vigente?idInmueble=${idInmueble}`);
+                    if (!response.ok) {
+                        throw new Error("Network response was not ok");
+                    }
+                    const disponible = await response.json();
+                    console.log(disponible);
+                    // Aquí puedes utilizar el valor booleano obtenido en 'data'
+                    const parent = document.querySelector(`[data-id="${idInmueble}"]`);
+                    const estado = parent.querySelector(".estado");
+                    if (disponible) {
+                        estado.classList.remove("disponible");
+                        estado.classList.add("ocupado");
+                        estado.innerHTML = "Ocupado";
+                    } else if (!disponible) {
+                        estado.classList.remove("ocupado");
+                        estado.classList.add("disponible");
+                        estado.innerHTML = "Disponible";
+                    }
+
+                } catch (error) {
+                    console.error("There was a problem with the fetch operation:", error);
+                }
+            })(@item.Id);
+        </script>
     }
   </div>
 </div>
-
-
 
 <!-- Modal -->
 <div class="modal" id="modalFechas" tabindex="-1" role="dialog">

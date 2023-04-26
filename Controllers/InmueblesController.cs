@@ -39,7 +39,9 @@ namespace Inmobiliaria.Controllers
         public ActionResult Details(int id)
         {
             var inm = Repo.GetInmueble(id);
-            ViewBag.Contrato = RepoContratos.obtenerIdPorInmueble(id);   
+            ViewBag.Contrato = RepoContratos.obtenerIdPorInmueble(id);
+            ViewBag.Disponible = RepoContratos.GetContratoVigentePorInmueble(id);   
+            
             return View(inm);
         }
 
