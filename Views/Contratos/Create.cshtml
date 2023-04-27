@@ -32,15 +32,18 @@
 <div class="info-contrato">
     <form asp-action="Create" id="formulario">
 
-        <div class="inmueble">
-            <label for="">Inmueble</label>
-            <div class="d-flex align-items-center">
-                <button type="button" class="btn btn-primary btn-inmueble" data-toggle="modal" data-target="#modalInmuebles" value="">
-                    Elegir Inmueble
-                </button>
+        @if(ViewBag.Inmueble == null){
+            <div class="inmueble">
+                <label for="">Inmueble</label>
+                <div class="d-flex align-items-center">
+                    <button type="button" class="btn btn-primary btn-inmueble" data-toggle="modal" data-target="#modalInmuebles" value="">
+                        Elegir Inmueble
+                    </button>
+                </div>
+                <p class="hidden text-danger" id="warning-inmueble">Debe seleccionar un inmueble</p>
             </div>
-            <p class="hidden text-danger" id="warning-inmueble">Debe seleccionar un inmueble</p>
-        </div>
+        }
+        
 
         <div class="form-group hidden disabled">
             <label class="control-label">Inmueble</label>
@@ -98,7 +101,12 @@
                     }
                     @* Esto sera invisible  *@
                      <div id="form-group-monto" class="form-group hidden">
+                    @if(ViewBag.Inmueble != null){
+                        <input asp-for="Monto" class="form-control" id="input-monto-envio" value="@Inmueble.Precio" required/>
+                    }else{
                         <input asp-for="Monto" class="form-control" id="input-monto-envio" required/>
+                    }
+                        
                         <span asp-validation-for="Monto" class="text-danger"></span>
                     </div> 
                     @* ------ *@
@@ -142,20 +150,21 @@
 </div>
 
 
-<!-- Modal -->
-<div class="modal fade" id="modalInmuebles" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-inmuebles" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Inmuebles</h5>
-        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        @Html.Partial("./../Inmuebles/_ListaInmuebles.cshtml")
-      </div>
+@if(ViewBag.Inmueble == null){
+    <div class="modal fade" id="modalInmuebles" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-inmuebles" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Inmuebles</h5>
+                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                @Html.Partial("./../Inmuebles/_ListaInmuebles.cshtml")
+            </div>
+            </div>
+        </div>
     </div>
-  </div>
-</div>
+}
 
 
 <script>
@@ -247,8 +256,6 @@
             setTimeout(() => {pWarning.classList.add("hidden")},2000)
             console.log(btnInquilino)
             isValid = false;
-        }else{
-            isValid = true;
         }
 
         if(!inputInmueble2.value || inputInmueble2.value == ""){
@@ -256,16 +263,12 @@
             pWarning.classList.remove("hidden");
             setTimeout(() => {pWarning.classList.add("hidden")},2000)
             isValid = false;
-        }else{
-            isValid = true;
         }
 
         if(textDescripcion.value.length >= 499){
             btnIniciar.disabled = true;
             alert("El textarea no puede tener más de 500 caracteres");
             isValid = false;
-        }else{
-            isValid = true;
         }
 
         inputsRequeridos.forEach((input) => {
@@ -301,7 +304,8 @@
     let buttonInmueble = document.querySelector(".btn-inmueble");
     let inputInmueble = document.getElementById("input-inmueble");
 
-    modalInmueble.addEventListener("click", (e) =>{
+    if(modalInmueble != null){
+        modalInmueble.addEventListener("click", (e) =>{
         if(e.target.matches('.btnSeleccionar')){
             buttonInmueble.innerHTML = e.target.dataset.infocompleta;
             inputInmueble.value = e.target.value;
@@ -311,5 +315,7 @@
             pResultado.innerHTML = input1.value;
         }
     });
+    }
+    
     //-----
 </script>
