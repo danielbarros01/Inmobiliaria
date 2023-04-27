@@ -28,7 +28,7 @@
 
             <div class="form-group">
                 <label asp-for="Direccion" class="control-label"></label>
-                <input asp-for="Direccion" class="form-control" />
+                <input asp-for="Direccion" class="form-control" required/>
                 <span asp-validation-for="Direccion" class="text-danger"></span>
             </div>
 
@@ -49,28 +49,28 @@
 
             <div class="form-group">
                 <label asp-for="Cantidad_ambientes" class="control-label"></label>
-                <input asp-for="Cantidad_ambientes" class="form-control" min="1"/>
+                <input asp-for="Cantidad_ambientes" class="form-control" min="1" required/>
                 <span asp-validation-for="Cantidad_ambientes" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Coordenadas" class="control-label"></label>
-                <input asp-for="Coordenadas" class="form-control" />
+                <input asp-for="Coordenadas" class="form-control" required/>
                 <span asp-validation-for="Coordenadas" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Precio" class="control-label"></label>
-                <input asp-for="Precio" class="form-control" />
+                <input asp-for="Precio" class="form-control" required/>
                 <span asp-validation-for="Precio" class="text-danger"></span>
             </div>
             <div class="form-group form-check">
                 <label class="form-check-label">
-                    <input class="form-check-input" asp-for="Disponible" checked/> @Html.DisplayNameFor(model => model.Disponible)
+                    <input class="form-check-input" asp-for="Disponible" hidden checked/>
                 </label>
             </div>
 
             <div class="form-group">
                 <label class="control-label">Propietario</label>
-                <select class="form-control" name="Propietario.Id">
+                <select class="form-control" name="Propietario.Id" required>
                     @foreach (var item in Propietarios)
                     {
                         <option value="@item.Id">@(item.Nombre + " " + item.Apellido)</option>
