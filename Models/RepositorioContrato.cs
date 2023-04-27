@@ -188,9 +188,7 @@ public class RepositorioContrato
         int res = 0;
         using (var conn = new MySqlConnection(connectionString))
         {
-            string query = @"
-            UPDATE inmuebles SET Disponible = 1 WHERE id = (SELECT inmueble_Id FROM contratos WHERE Id = @Id);
-            UPDATE contratos SET Hasta=@Hasta WHERE Id = @Id;";
+            string query = @"UPDATE contratos SET Hasta=@Hasta WHERE Id = @Id;";
 
             using (var command = new MySqlCommand(query, conn))
             {
@@ -210,9 +208,7 @@ public class RepositorioContrato
 
         using (var conn = new MySqlConnection(connectionString))
         {
-            string query = @"
-                UPDATE inmuebles SET Disponible = 1 WHERE id = (SELECT inmueble_Id FROM contratos WHERE Id = @Id);
-                DELETE FROM contratos where Id = @Id;";
+            string query = @"DELETE FROM contratos where Id = @Id;";
 
             using (var command = new MySqlCommand(query, conn))
             {

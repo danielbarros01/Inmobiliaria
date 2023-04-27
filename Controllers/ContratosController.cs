@@ -41,6 +41,9 @@ namespace Inmobiliaria.Controllers
             {
                 var contrato = Repo.GetContrato(id);
                 ViewBag.Multa = TempData["Multa"];
+                ViewBag.SinVigencia = 
+                    contrato.Desde >= DateTime.Now && contrato.Hasta >= DateTime.Now 
+                    || contrato.Desde <= DateTime.Now && contrato.Hasta <= DateTime.Now;
 
                 return View(contrato);
             }
@@ -168,7 +171,7 @@ namespace Inmobiliaria.Controllers
         {
             var datos = Repo.CancelarContrato(id);
             TempData["Multa"] = $"Contrato Cancelado, debera pagar una multa";
-
+            
             return RedirectToAction(nameof(Details), new { id = id });
         }
 
@@ -178,7 +181,7 @@ namespace Inmobiliaria.Controllers
         public Object Vigente(int idInmueble)
         {
             var fechas = Repo.GetContratoVigentePorInmueble(idInmueble);
-
+            
             return fechas;
         }
     }

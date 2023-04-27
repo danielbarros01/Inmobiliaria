@@ -54,9 +54,13 @@
                 <p>@Model.Desde</p>
             </div>
             <div class="card-fecha border border-danger">
-                <h6>El contrato vence el</h6>
-                <p>@Model.Hasta</p>
-                <strong><p class="text-danger">Quedan x dias de contrato</p></strong>
+                @if(ViewBag.SinVigencia){
+                    <h6>El contrato ya vencio o empieza el</h6>
+                    <p>@Model.Hasta</p>
+                }else{
+                    <h6>El contrato vence el</h6>
+                    <p>@Model.Hasta</p>
+                }
             </div>
         </div>
 
@@ -75,13 +79,15 @@
 
     <div class="bottom-contrato d-flex justify-content-center">
         @Html.ActionLink("Ver Pagos", "ListPagosContrato", "Pagos", new { id = Model.Id }, new { @class = "btn btn-primary"})
-        @Html.ActionLink("Renovar contrato", "RenovarContrato", "Contratos", new { id = Model.Id }, new { @class = "btn btn-primary"})
         @Html.ActionLink("Editar", "Edit", "Contratos", new { id = Model.Id }, new { @class = "btn btn-warning"})    
         
-        <form asp-controller="Contratos" asp-action="CancelarContrato" method="post">
-            <input name="id" class="form-control" value="@Model.Id" type="hidden">
-            <input type="submit" class="btn btn-danger" value="Cancelar contrato">
-        </form>
+        @if(!ViewBag.SinVigencia){
+            @Html.ActionLink("Renovar contrato", "RenovarContrato", "Contratos", new { id = Model.Id }, new { @class = "btn btn-primary"})
+            <form asp-controller="Contratos" asp-action="CancelarContrato" method="post">
+                <input name="id" class="form-control" value="@Model.Id" type="hidden">
+                <input type="submit" class="btn btn-danger" value="Cancelar contrato">
+            </form>
+        }
     </div>
 
 </div>
