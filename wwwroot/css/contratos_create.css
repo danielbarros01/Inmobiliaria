@@ -111,11 +111,30 @@ i{
       font-size: 24px;
     }
 
+    .modal-dialog{
+        background-color: white;
+    }
   }
 
   @media screen and (max-width: 480px) {
     .info-foto img{
         display: none;
+    }
+
+    .modal-content{
+        font-size: 70%;
+    }
+
+    .modal-dialog{
+        display: parent;
+    }
+
+    .btnSeleccionar{
+        font-size: 70%;
+    }
+
+    .modal-body{
+        width: 100vw;
     }
   }
 
@@ -124,3 +143,14 @@ i{
     display: none;
 }
   
+.modal-content{
+    width: 80%;
+    border: none;
+}
+
+.modal-dialog{
+    display: flex;
+    justify-content: center;
+    max-width: none;
+}
+

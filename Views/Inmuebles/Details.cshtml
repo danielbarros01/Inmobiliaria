@@ -75,7 +75,7 @@
 
 <div class="container-botones d-flex flex-column flex-md-row justify-content-center align-items-center">
     @if(ViewBag.Disponible != null && !ViewBag.Disponible) { 
-        <a href="@Url.Action("Create", "Contratos",  new { idInmueble = @Model.Id })" class="btn btn-success btn-alquilar">
+        <a href="@Url.Action("CreateConInmueble", "Contratos",  new { idInmueble = @Model.Id })" class="btn btn-success btn-alquilar">
             <i class="fa-solid fa-check-double"></i>Alquilar
         </a>
     }

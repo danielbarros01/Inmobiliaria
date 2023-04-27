@@ -1,0 +1,52 @@
+@model IEnumerable<Inmobiliaria.Models.Inmueble>
+
+@{
+    var Inmuebles = (IList<Inmueble>)ViewBag.Inmuebles;
+    ViewData["Title"] = "Index";
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Tipo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Direccion)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Uso)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Precio)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Inmuebles) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Tipo.Tipo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Direccion)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UsoNombre)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Precio)
+            </td>
+            <td>
+                <button class="btn btn-info btnSeleccionar" 
+                        data-infoCompleta="@item.Tipo.Tipo en @item.Direccion" 
+                        data-precio="@item.Precio"
+                        value="@item.Id">
+                    Seleccionar
+                </button>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
