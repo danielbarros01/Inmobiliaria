@@ -4,10 +4,14 @@
     ViewData["Title"] = "Create";
     var Inquilinos = (IList<Inquilino>)ViewBag.Inquilinos2;
     var Inmueble = ViewBag.Inmueble;
+    var Fechas = ViewBag.Fechas;
 }
 
 <head>
     <link rel="stylesheet" href="~/css/contratos_create.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 </head>
 
 <a asp-action="Index" class="btn-volver"><i class="fa-solid fa-arrow-left"></i></a>
@@ -166,7 +170,6 @@
     </div>
 }
 
-
 <script>
     //Precio
     //const form-group-monto = document.getElementById("form-group-monto");
@@ -299,23 +302,52 @@
 </script>
 
 <script>
-    //Inmueble
-    const modalInmueble = document.getElementById("modalInmuebles");
-    let buttonInmueble = document.querySelector(".btn-inmueble");
-    let inputInmueble = document.getElementById("input-inmueble");
+//Inmueble
+const modalInmueble = document.getElementById("modalInmuebles");
+let buttonInmueble = document.querySelector(".btn-inmueble");
+let inputInmueble = document.getElementById("input-inmueble");
 
-    if(modalInmueble != null){
-        modalInmueble.addEventListener("click", (e) =>{
-        if(e.target.matches('.btnSeleccionar')){
+if (modalInmueble != null) {
+    modalInmueble.addEventListener("click", (e) => {
+        if (e.target.matches('.btnSeleccionar')) {
             buttonInmueble.innerHTML = e.target.dataset.infocompleta;
             inputInmueble.value = e.target.value;
             document.getElementById("inputPrecio").value = e.target.dataset.precio;
 
             inputEnvioMonto.value = input1.value;
             pResultado.innerHTML = input1.value;
+
+
+            let urlSolicitud = `/Contratos/FechasInmueble?idInmueble=${inputInmueble.value}`;
+
+            // Obtener la lista de fechas desactivadas desde el servidor
+            $.ajax({
+                url: urlSolicitud,
+                success: function (fechas) {
+                    // Manejador del evento change del input de fecha
+                    $('#inputFechaEntrada').on('change', function () {
+                        var fechaSeleccionada = moment($(this).val());
+
+                        // Verificar si la fecha seleccionada está entre las fechas desde y hasta de alguno de los objetos en el array
+                        var esFechaValida = fechas.some(function (rango) {
+                            var fechaDesde = moment(rango.desde);
+                            var fechaHasta = moment(rango.hasta);
+                            return fechaSeleccionada.isBetween(fechaDesde, fechaHasta);
+                        });
+
+                        if (esFechaValida) {
+                            alert('La fecha seleccionada está ocupada');
+                        } else {
+                            console.log('La fecha seleccionada está dentro del rango permitido.');
+                        }
+                    });
+                }
+            });
+
+
         }
     });
-    }
-    
-    //-----
+}
+
+//-----
 </script>

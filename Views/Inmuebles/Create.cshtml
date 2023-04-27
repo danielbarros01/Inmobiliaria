@@ -31,11 +31,22 @@
                 <input asp-for="Direccion" class="form-control" />
                 <span asp-validation-for="Direccion" class="text-danger"></span>
             </div>
+
+
+
             <div class="form-group">
-                <label asp-for="Uso" class="control-label"></label>
-                <input asp-for="Uso" class="form-control" />
-                <span asp-validation-for="Uso" class="text-danger"></span>
-            </div>
+            <label asp-for="Uso" class="control-label">Uso</label>
+                <select name="Uso" class="form-control">
+                    @foreach (var kvp in (IDictionary<int, string>)ViewBag.Usos)
+                    {
+                        <option value="@kvp.Key">@kvp.Value</option>
+                    }
+                </select>
+            <span asp-validation-for="Uso" class="text-danger"></span>
+        </div>
+
+
+
             <div class="form-group">
                 <label asp-for="Cantidad_ambientes" class="control-label"></label>
                 <input asp-for="Cantidad_ambientes" class="form-control" min="1"/>

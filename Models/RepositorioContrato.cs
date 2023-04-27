@@ -424,4 +424,36 @@ public class RepositorioContrato
         return Vigente;
     }
 
+    public List<Object> GetFechasContratos(int idInmueble){
+        var list = new List<Object>();
+
+        using (var connection = new MySqlConnection(connectionString))
+        {
+            string query = @"SELECT Desde,Hasta
+            FROM inmobiliaria.contratos c
+            INNER JOIN inmuebles inm ON c.inmueble_Id = inm.Id
+            WHERE inm.Id = @InmuebleId";
+
+            using (var command = new MySqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@InmuebleId", idInmueble);
+                connection.Open();
+                using (var reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        var fechas = new {
+                            Desde = reader.GetDateTime("Desde"),
+                            Hasta = reader.GetDateTime("Hasta")
+                        };
+
+                        list.Add(fechas);
+                    }
+                }
+                connection.Close();
+            }
+
+        }
+        return list;
+    }
 }

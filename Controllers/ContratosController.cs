@@ -58,6 +58,7 @@ namespace Inmobiliaria.Controllers
         {
             ViewBag.Inquilinos2 = RepoInquilinos.GetInquilinos();
             ViewBag.Inmueble = RepoInmuebles.GetInmueble(idInmueble);
+            ViewBag.Fechas = Repo.GetFechasContratos(idInmueble);
 
             return View("Create");
         }
@@ -189,6 +190,15 @@ namespace Inmobiliaria.Controllers
         public Object Vigente(int idInmueble)
         {
             var fechas = Repo.GetContratoVigentePorInmueble(idInmueble);
+            
+            return fechas;
+        }
+
+        // GET: Contratos/FechasInmueble
+        [HttpGet]
+        public Object FechasInmueble(int idInmueble)
+        {
+            var fechas = Repo.GetFechasContratos(idInmueble);
             
             return fechas;
         }
