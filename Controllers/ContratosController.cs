@@ -41,8 +41,8 @@ namespace Inmobiliaria.Controllers
             {
                 var contrato = Repo.GetContrato(id);
                 ViewBag.Multa = TempData["Multa"];
-                ViewBag.SinVigencia = 
-                    contrato.Desde >= DateTime.Now && contrato.Hasta >= DateTime.Now 
+                ViewBag.SinVigencia =
+                    contrato.Desde >= DateTime.Now && contrato.Hasta >= DateTime.Now
                     || contrato.Desde <= DateTime.Now && contrato.Hasta <= DateTime.Now;
 
                 return View(contrato);
@@ -178,9 +178,19 @@ namespace Inmobiliaria.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult CancelarContrato(int id)
         {
-            var datos = Repo.CancelarContrato(id);
-            TempData["Multa"] = $"Contrato Cancelado, debera pagar una multa";
-            
+            var c = Repo.CancelarContrato(id);
+
+            DateTime fechaActual = DateTime.Now;
+            TimeSpan tiempoTranscurrido = fechaActual - c.Desde;
+            int diasTranscurridos = tiempoTranscurrido.Days;
+            TimeSpan tiempoTotal = c.Hasta - c.Desde;
+            double mitadTiempoEnDias = tiempoTotal.TotalDays / 2;
+            bool yaPasoMitadTiempo = tiempoTranscurrido.Days >= mitadTiempoEnDias;
+            double precio = (double)((yaPasoMitadTiempo) ? c.Monto : c.Monto * 2);
+
+
+            TempData["Multa"] = $"Contrato Cancelado, debera pagar una multa de {precio}";
+
             return RedirectToAction(nameof(Details), new { id = id });
         }
 
@@ -190,7 +200,7 @@ namespace Inmobiliaria.Controllers
         public Object Vigente(int idInmueble)
         {
             var fechas = Repo.GetContratoVigentePorInmueble(idInmueble);
-            
+
             return fechas;
         }
 
@@ -199,7 +209,7 @@ namespace Inmobiliaria.Controllers
         public Object FechasInmueble(int idInmueble)
         {
             var fechas = Repo.GetFechasContratos(idInmueble);
-            
+
             return fechas;
         }
     }

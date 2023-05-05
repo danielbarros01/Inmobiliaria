@@ -82,7 +82,6 @@
         @Html.ActionLink("Editar", "Edit", "Contratos", new { id = Model.Id }, new { @class = "btn btn-warning"})    
         
         @if(!ViewBag.SinVigencia){
-            @Html.ActionLink("Renovar contrato", "RenovarContrato", "Contratos", new { id = Model.Id }, new { @class = "btn btn-primary"})
             <form asp-controller="Contratos" asp-action="CancelarContrato" method="post">
                 <input name="id" class="form-control" value="@Model.Id" type="hidden">
                 <input type="submit" class="btn btn-danger" value="Cancelar contrato">

@@ -184,18 +184,35 @@ public class RepositorioContrato
         return res;
     }
 
-    public int CancelarContrato(int id){
-        int res = 0;
+    public Contrato CancelarContrato(int id)
+    {
+        Contrato? res = null;
         using (var conn = new MySqlConnection(connectionString))
         {
-            string query = @"UPDATE contratos SET Hasta=@Hasta WHERE Id = @Id;";
+            string query = @"
+            UPDATE contratos SET Hasta=@Hasta WHERE Id = @Id;
+            SELECT Desde,Hasta,Monto FROM contratos WHERE Id = @Id;
+            ";
 
             using (var command = new MySqlCommand(query, conn))
             {
                 command.Parameters.AddWithValue("@Hasta", DateTime.Now.AddDays(-1));
                 command.Parameters.AddWithValue("@Id", id);
                 conn.Open();
-                res = command.ExecuteNonQuery();
+
+                using (var reader = command.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        res = new Contrato
+                        {
+                            Desde = reader.GetDateTime("Desde"),
+                            Hasta = reader.GetDateTime("Hasta"),
+                            Monto = reader.GetDecimal(nameof(Contrato.Monto))
+                        };
+                    }
+                }
+
                 conn.Close();
             }
         }
@@ -307,7 +324,8 @@ public class RepositorioContrato
         return list;
     }
 
-    public List<Contrato> GetContratosVigentes(){
+    public List<Contrato> GetContratosVigentes()
+    {
         var list = new List<Contrato>();
 
         using (var connection = new MySqlConnection(connectionString))
@@ -371,7 +389,8 @@ public class RepositorioContrato
         return list;
     }
 
-    public Boolean GetContratoVigentePorInmueble(int idInmueble){
+    public Boolean GetContratoVigentePorInmueble(int idInmueble)
+    {
 
         var Vigente = false;
 
@@ -397,7 +416,8 @@ public class RepositorioContrato
         return Vigente;
     }
 
-    public Boolean Vigente(int id){
+    public Boolean Vigente(int id)
+    {
 
         var Vigente = false;
 
@@ -424,7 +444,8 @@ public class RepositorioContrato
         return Vigente;
     }
 
-    public List<Object> GetFechasContratos(int idInmueble){
+    public List<Object> GetFechasContratos(int idInmueble)
+    {
         var list = new List<Object>();
 
         using (var connection = new MySqlConnection(connectionString))
@@ -442,7 +463,8 @@ public class RepositorioContrato
                 {
                     while (reader.Read())
                     {
-                        var fechas = new {
+                        var fechas = new
+                        {
                             Desde = reader.GetDateTime("Desde"),
                             Hasta = reader.GetDateTime("Hasta")
                         };
