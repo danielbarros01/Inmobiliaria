@@ -12,14 +12,18 @@ namespace Inmobiliaria.Controllers
 {
     public class PagosController : Controller
     {
-
+        
+        private readonly IConfiguration configuration;
         private readonly RepositorioPago Repo;
         private readonly RepositorioContrato RepoContrato;
 
-        public PagosController()
+        public PagosController(IConfiguration configuration)
         {
+            this.configuration = configuration;
+            string connectionString = configuration.GetSection("ConnectionStrings")["MySql"];
+            
             Repo = new RepositorioPago();
-            RepoContrato = new RepositorioContrato();
+            RepoContrato = new RepositorioContrato(connectionString);
         }
 
         // GET: Pagos

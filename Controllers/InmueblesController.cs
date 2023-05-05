@@ -11,17 +11,22 @@ namespace Inmobiliaria.Controllers
 {
     public class InmueblesController : Controller
     {
+        private readonly IConfiguration configuration;
         private readonly RepositorioInmueble Repo;
-        private readonly RepositorioPropietario RepoPropietarios;
+        private readonly IRepositorioPropietario RepoPropietarios;
         private readonly RepositorioTipoInmueble RepoTipoInmueble;
         private readonly RepositorioContrato RepoContratos;
 
-        public InmueblesController()
+        public InmueblesController(IConfiguration configuration, IRepositorioPropietario repoPropietarios)
         {
+            //string connectionString = configuration.GetSection("ConnectionStrings")["MySql"];
+            string connectionString = configuration["ConnectionStrings:MySql"];
+
             Repo = new RepositorioInmueble();
-            RepoPropietarios = new RepositorioPropietario();
+            RepoPropietarios = repoPropietarios;
             RepoTipoInmueble = new RepositorioTipoInmueble();
-            RepoContratos = new RepositorioContrato();
+            RepoContratos = new RepositorioContrato(connectionString);
+            this.configuration = configuration;
         }
 
         // GET: Inmuebles
@@ -55,7 +60,7 @@ namespace Inmobiliaria.Controllers
         // GET: Inmuebles/Create
         public ActionResult Create()
         {
-            ViewBag.Propietarios = RepoPropietarios.GetPropietarios();
+            ViewBag.Propietarios = RepoPropietarios.ObtenerTodos();
             ViewBag.TiposInmueble = RepoTipoInmueble.GetTipos();
             ViewBag.Usos = Inmueble.ObtenerUsos();
 
@@ -85,7 +90,7 @@ namespace Inmobiliaria.Controllers
         public ActionResult Edit(int id)
         {
             var inm = Repo.GetInmueble(id);
-            ViewBag.Propietarios = RepoPropietarios.GetPropietarios(); //dato anexo, no se pasa en View porque es justamente anexo a Inmueble, el ViewBag le metemos lo que queremos y se pasa al otro lado
+            ViewBag.Propietarios = RepoPropietarios.ObtenerTodos(); //dato anexo, no se pasa en View porque es justamente anexo a Inmueble, el ViewBag le metemos lo que queremos y se pasa al otro lado
             ViewBag.TiposInmueble = RepoTipoInmueble.GetTipos();
             //ViewData["Propietarios"] = RepoPropietarios.GetPropietarios(); //lo mismo de arriba pero tipo diccionario
             ViewBag.Usos = Inmueble.ObtenerUsos();

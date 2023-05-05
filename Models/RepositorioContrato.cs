@@ -4,9 +4,12 @@ namespace Inmobiliaria.Models;
 
 public class RepositorioContrato
 {
-    string connectionString = "Server=localhost;Database=inmobiliaria;Uid=root;Pwd=roque;";
+    string connectionString = "";
 
-    public RepositorioContrato() { }
+    public RepositorioContrato(string conexion)
+    {
+        connectionString = conexion;
+    }
 
     public int Alta(Contrato c)
     {

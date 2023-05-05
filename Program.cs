@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using dotenv.net;
+using Inmobiliaria.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
@@ -30,6 +31,10 @@ builder.Services.AddControllersWithViews(options =>
         .Build();
     options.Filters.Add(new AuthorizeFilter(policy));
 });
+
+
+builder.Services.AddTransient<IRepositorio<Propietario>, RepositorioPropietario>();
+builder.Services.AddTransient<IRepositorioPropietario, RepositorioPropietario>();
 
 var app = builder.Build();
 

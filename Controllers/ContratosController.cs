@@ -12,19 +12,21 @@ namespace Inmobiliaria.Controllers
     public class ContratosController : Controller
     {
 
+        private readonly IConfiguration configuration;
 
         private readonly RepositorioContrato Repo;
         private readonly RepositorioInquilino RepoInquilinos;
         private readonly RepositorioInmueble RepoInmuebles;
-        private readonly RepositorioContrato RepoContratos;
 
-        public ContratosController()
+        public ContratosController(IConfiguration configuration)
         {
-            Repo = new RepositorioContrato();
+            this.configuration = configuration;
+            string connectionString = configuration.GetSection("ConnectionStrings")["MySql"];
+            Repo = new RepositorioContrato(connectionString);
             RepoInquilinos = new RepositorioInquilino();
             RepoInmuebles = new RepositorioInmueble();
-            RepoContratos = new RepositorioContrato();
         }
+
         // GET: Contratos
         public ActionResult Index()
         {

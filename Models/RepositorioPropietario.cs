@@ -2,15 +2,13 @@ using MySql.Data.MySqlClient;
 
 namespace Inmobiliaria.Models;
 
-public class RepositorioPropietario
+public class RepositorioPropietario : RepositorioBase, IRepositorioPropietario
 {
-
-    string connectionString = "Server=localhost;Database=inmobiliaria;Uid=root;Pwd=roque;";
-
-    public RepositorioPropietario()
+                                                               //llamar al contructor padre(super en java)
+    public RepositorioPropietario(IConfiguration configuration) : base(configuration)
     { }
 
-    public List<Propietario> GetPropietarios()
+    public List<Propietario> ObtenerTodos()
     {
         var list = new List<Propietario>();
         using (var conn = new MySqlConnection(connectionString))
@@ -67,7 +65,7 @@ public class RepositorioPropietario
         return res;
     }
 
-    public Propietario GetPropietario(int id)
+    public Propietario ObtenerPorId(int id)
     {
         Propietario? res = null;
 
@@ -147,7 +145,4 @@ public class RepositorioPropietario
         }
         return res;
     }
-
-
-    
 }

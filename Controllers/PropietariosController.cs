@@ -12,17 +12,19 @@ namespace Inmobiliaria.Controllers
     public class PropietariosController : Controller
     {
 
-        private readonly RepositorioPropietario Repo;
+        private readonly IRepositorioPropietario Repo;
+        private readonly IConfiguration config;
 
-        public PropietariosController()
+        public PropietariosController(IRepositorioPropietario repo, IConfiguration config)
         {
-            Repo = new RepositorioPropietario();
+            this.Repo = repo;
+            this.config = config;
         }
 
         // GET: Propietarios
         public ActionResult Index()
         {
-            var lista = Repo.GetPropietarios();
+            var lista = Repo.ObtenerTodos();
             ViewBag.Mensaje = TempData["Mensaje"];
             //Tempdata es para pasar datos entre acciones
 
@@ -32,7 +34,7 @@ namespace Inmobiliaria.Controllers
         // GET: Propietarios/Details/5
         public ActionResult Details(int id)
         {
-            var propietario = Repo.GetPropietario(id);
+            var propietario = Repo.ObtenerPorId(id);
             return View(propietario);
         }
 
@@ -63,7 +65,7 @@ namespace Inmobiliaria.Controllers
         // GET: Propietarios/Edit/5
         public ActionResult Edit(int id)
         {
-            var propietario = Repo.GetPropietario(id);
+            var propietario = Repo.ObtenerPorId(id);
             
             return View(propietario);
         }
@@ -90,7 +92,7 @@ namespace Inmobiliaria.Controllers
         [Authorize(Policy = "Administrador")]
         public ActionResult Delete(int id)
         {
-            var propietario = Repo.GetPropietario(id);
+            var propietario = Repo.ObtenerPorId(id);
             
             return View(propietario);
         }
