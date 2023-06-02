@@ -36,7 +36,15 @@
     </div>
 
     <div class="info-foto col-md-6 align-items-center justify-content-center">
-        <img class="card-img-top" src="https://www.bbva.com/wp-content/uploads/2021/04/casas-ecolo%CC%81gicas_apertura-hogar-sostenibilidad-certificado-.jpg" alt="Foto del inmueble">  
+        
+        @if(Model.ImagenRuta != null){
+            <img class="card-img-top" src="@Model.ImagenRuta" alt="Foto del inmueble">    
+        }else{
+            <img class="card-img-top" src="https://www.bbva.com/wp-content/uploads/2021/04/casas-ecolo%CC%81gicas_apertura-hogar-sostenibilidad-certificado-.jpg" alt="Foto del inmueble">
+        }
+        
+        
+        
         @if(ViewBag.Disponible != null && ViewBag.Disponible) { 
             <p class="estado ocupado">Ocupado</p>
         }else{

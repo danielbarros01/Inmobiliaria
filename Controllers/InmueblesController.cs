@@ -6,18 +6,21 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Inmobiliaria.Models;
 using Microsoft.AspNetCore.Authorization;
+using Inmobiliaria.Utilities;
 
 namespace Inmobiliaria.Controllers
 {
     public class InmueblesController : Controller
     {
         private readonly IConfiguration configuration;
+        private readonly IWebHostEnvironment environment;
+
         private readonly RepositorioInmueble Repo;
         private readonly IRepositorioPropietario RepoPropietarios;
         private readonly RepositorioTipoInmueble RepoTipoInmueble;
         private readonly RepositorioContrato RepoContratos;
 
-        public InmueblesController(IConfiguration configuration, IRepositorioPropietario repoPropietarios)
+        public InmueblesController(IConfiguration configuration, IRepositorioPropietario repoPropietarios, IWebHostEnvironment environment)
         {
             //string connectionString = configuration.GetSection("ConnectionStrings")["MySql"];
             string connectionString = configuration["ConnectionStrings:MySql"];
@@ -27,6 +30,7 @@ namespace Inmobiliaria.Controllers
             RepoTipoInmueble = new RepositorioTipoInmueble();
             RepoContratos = new RepositorioContrato(connectionString);
             this.configuration = configuration;
+            this.environment = environment;
         }
 
         // GET: Inmuebles
@@ -78,6 +82,12 @@ namespace Inmobiliaria.Controllers
                 Repo.Alta(inmueble);
                 TempData["Mensaje"] = $"Inmueble con direccion {inmueble.Direccion} y ID {inmueble.Id} creado!";
 
+                if (inmueble.ImagenFile != null && inmueble.Id > 0)
+                {
+                    inmueble.ImagenRuta = inmueble.ImagenFile.GuardarImagen(environment.WebRootPath, inmueble.Id, "inmueble");
+                    Repo.Modificar(inmueble);
+                }
+
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -105,6 +115,12 @@ namespace Inmobiliaria.Controllers
         {
             try
             {
+                if (inmueble.ImagenFile != null && inmueble.Id > 0)
+                {
+                    inmueble.ImagenRuta = inmueble.ImagenFile.GuardarImagen(environment.WebRootPath, inmueble.Id, "inmueble");
+                    Repo.Modificar(inmueble);
+                }
+
                 Repo.Modificar(inmueble);
                 TempData["Mensaje"] = $"Inmueble con {inmueble.Direccion} y ID {inmueble.Id} modificado!";
 
@@ -132,7 +148,18 @@ namespace Inmobiliaria.Controllers
         {
             try
             {
-                Repo.Eliminar(id);
+                int res = Repo.Eliminar(id);
+
+                //eliminar foto
+                if (res != -1)
+                {
+                    var ruta = Path.Combine(environment.WebRootPath, "uploads", $"avatar_{id}" + Path.GetExtension(inmueble.ImagenRuta));
+                    if (System.IO.File.Exists(ruta))
+                    {
+                        System.IO.File.Delete(ruta);
+                    }
+                }
+
                 TempData["Mensaje"] = $"Inmueble con direccion {inmueble.Direccion} con ID {inmueble.Id} eliminado!";
 
                 return RedirectToAction(nameof(Index));

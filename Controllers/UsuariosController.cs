@@ -1,18 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
 using Inmobiliaria.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
+using Inmobiliaria.Utilities;
 
 namespace Inmobiliaria.Controllers
 {
@@ -74,9 +67,8 @@ namespace Inmobiliaria.Controllers
 
                 if (u.AvatarFile != null && u.Id > 0)
                 {
-                    u.AvatarRuta = u.AvatarFile.GuardarImagen(environment.WebRootPath, u.Id);
+                    u.AvatarRuta = u.AvatarFile.GuardarImagen(environment.WebRootPath, u.Id, "avatar");
                     Repo.Modificar(u);
-
                 }
 
                 return RedirectToAction(nameof(Index));
@@ -122,7 +114,7 @@ namespace Inmobiliaria.Controllers
 
                 if (u.AvatarFile != null && u.Id > 0)
                 {
-                    u.AvatarRuta = ImagenExtensions.GuardarImagen(u.AvatarFile, environment.WebRootPath, u.Id);
+                    u.AvatarRuta = ImagenExtensions.GuardarImagen(u.AvatarFile, environment.WebRootPath, u.Id, "avatar");
                 }
 
                 Repo.Modificar(u);
@@ -352,30 +344,4 @@ namespace Inmobiliaria.Controllers
             return RedirectToAction("Index", "Home");
         }
     }
-
-    public static class ImagenExtensions
-    {
-        public static string GuardarImagen(this IFormFile imagen, string webRootPath, int id)
-        {
-            if (imagen == null) return null;
-
-            string path = Path.Combine(webRootPath, "uploads");
-
-            if (!Directory.Exists(path))
-            {
-                Directory.CreateDirectory(path);
-            }
-
-            string fileName = $"avatar_{id}{Path.GetExtension(imagen.FileName)}";//Ruta fisica del servidor
-            string fullPath = Path.Combine(path, fileName);// /uploads/avatar_1.jpg //Ruta que voy a poner en mi BD
-
-            using (FileStream stream = new FileStream(fullPath, FileMode.Create))
-            {
-                imagen.CopyTo(stream);
-            }
-
-            return Path.Combine("/uploads", fileName);
-        }
-    }
-
 }

@@ -4,7 +4,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Inmobiliaria.Models
 {
 
-    public enum enumUso{
+    public enum enumUso
+    {
         Residencial = 1,
         Comercial = 2
     }
@@ -24,6 +25,11 @@ namespace Inmobiliaria.Models
         public string Coordenadas { get; set; }
         public decimal Precio { get; set; }
         public bool Disponible { get; set; }
+
+        public string? ImagenRuta { get; set; }
+        [Display(Name = "Imagen")]
+        public IFormFile? ImagenFile { get; set; }
+        
         public int PropietarioId { get; set; }
 
         //[ForeignKey(nameof(PropietarioId))] mal?

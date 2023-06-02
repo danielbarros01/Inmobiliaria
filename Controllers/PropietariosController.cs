@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Inmobiliaria.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 
 namespace Inmobiliaria.Controllers
 {
@@ -51,6 +52,14 @@ namespace Inmobiliaria.Controllers
         {
             try
             {
+                string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+                                password: propietario.Password,
+                                salt: System.Text.Encoding.ASCII.GetBytes(config["Salt"]),
+                                prf: KeyDerivationPrf.HMACSHA1,
+                                iterationCount: 10000,
+                                numBytesRequested: 256 / 8));
+
+                propietario.Password = hashed;
                 Repo.Alta(propietario);
 
                 TempData["Mensaje"] =  $"Propietario {propietario.Nombre} {propietario.Apellido} con ID {propietario.Id} cargado con exito!";

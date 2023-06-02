@@ -47,7 +47,7 @@ public class RepositorioInmueble
         using (var connection = new MySqlConnection(connectionString))
         {
             string query = @"
-            SELECT i.Id, i.Direccion, i.Uso, i.Cantidad_ambientes, i.Coordenadas, i.Precio, i.Disponible, i.propietario_Id, p.nombre, p.Apellido, t.Tipo
+            SELECT i.Id, i.Direccion, i.Uso, i.Cantidad_ambientes, i.Coordenadas, i.Precio, i.Disponible, i.ImagenRuta,i.propietario_Id, p.nombre, p.Apellido, t.Tipo
             FROM inmuebles i
             INNER JOIN propietarios p ON i.propietario_id = p.Id
             INNER JOIN tipos_inmueble t ON i.tipo_inmueble_Id = t.Id;";
@@ -68,6 +68,7 @@ public class RepositorioInmueble
                             Coordenadas = reader.GetString(nameof(Inmueble.Coordenadas)),
                             Precio = reader.GetDecimal(nameof(Inmueble.Precio)),
                             Disponible = reader.GetBoolean(nameof(Inmueble.Disponible)),
+                            ImagenRuta = reader.IsDBNull(reader.GetOrdinal(nameof(Inmueble.ImagenRuta))) ? null : reader.GetString(nameof(Inmueble.ImagenRuta)),
                             PropietarioId = reader.GetInt32("propietario_Id"),
                             Propietario = new Propietario
                             {
@@ -98,7 +99,7 @@ public class RepositorioInmueble
         using (var conn = new MySqlConnection(connectionString))
         {
             var query = @"
-            SELECT i.Id, i.Direccion, i.Uso, i.Cantidad_ambientes, i.Coordenadas, i.Precio, i.Disponible, i.propietario_Id, p.nombre, p.Apellido,p.Telefono, p.Email, t.Tipo
+            SELECT i.Id, i.Direccion, i.Uso, i.Cantidad_ambientes, i.Coordenadas, i.Precio, i.Disponible, i.ImagenRuta,i.propietario_Id, p.nombre, p.Apellido,p.Telefono, p.Email, t.Tipo
             FROM inmuebles i
             INNER JOIN propietarios p ON i.propietario_id = p.Id
             INNER JOIN tipos_inmueble t ON i.tipo_inmueble_Id = t.Id
@@ -121,6 +122,7 @@ public class RepositorioInmueble
                             Coordenadas = reader.GetString(nameof(Inmueble.Coordenadas)),
                             Precio = reader.GetDecimal(nameof(Inmueble.Precio)),
                             Disponible = reader.GetBoolean(nameof(Inmueble.Disponible)),
+                            ImagenRuta = reader.IsDBNull(reader.GetOrdinal(nameof(Inmueble.ImagenRuta))) ? null : reader.GetString(nameof(Inmueble.ImagenRuta)),
                             PropietarioId = reader.GetInt32("propietario_Id"),
                             Propietario = new Propietario
                             {
@@ -155,9 +157,15 @@ public class RepositorioInmueble
             Coordenadas=@coordenadas,
             Precio=@precio, 
             Disponible=@disponible, 
+            ImagenRuta=@imagen,
             propietario_Id=@propietarioId, 
             tipo_inmueble_Id=@tipoInmuebleId 
             WHERE Id = @Id;";
+
+            if (i.ImagenRuta == null)
+            {
+                string updatedSqlQuery = query.Replace("ImagenRuta=@imagen,", string.Empty);
+            }
 
             using (var command = new MySqlCommand(query, conn))
             {
@@ -167,6 +175,7 @@ public class RepositorioInmueble
                 command.Parameters.AddWithValue("@coordenadas", i.Coordenadas);
                 command.Parameters.AddWithValue("@precio", i.Precio);
                 command.Parameters.AddWithValue("@disponible", i.Disponible);
+                command.Parameters.AddWithValue("@imagen", i.ImagenRuta);
                 command.Parameters.AddWithValue("@propietarioId", i.Propietario.Id);
                 command.Parameters.AddWithValue("@tipoInmuebleId", i.Tipo.Id);
 
@@ -203,7 +212,7 @@ public class RepositorioInmueble
         using (var conn = new MySqlConnection(connectionString))
         {
             var query = @"
-            SELECT i.Id, i.Direccion, i.Uso, i.Cantidad_ambientes, i.Coordenadas, i.Precio, i.Disponible, i.propietario_Id, p.nombre, p.Apellido, p.Telefono, t.Tipo
+            SELECT i.Id, i.Direccion, i.Uso, i.Cantidad_ambientes, i.Coordenadas, i.Precio, i.Disponible, i.ImagenRuta, i.propietario_Id, p.nombre, p.Apellido, p.Telefono, t.Tipo
             FROM inmuebles i
             INNER JOIN propietarios p ON i.propietario_id = p.Id
             INNER JOIN tipos_inmueble t ON i.tipo_inmueble_Id = t.Id
@@ -225,6 +234,7 @@ public class RepositorioInmueble
                             Coordenadas = reader.GetString(nameof(Inmueble.Coordenadas)),
                             Precio = reader.GetDecimal(nameof(Inmueble.Precio)),
                             Disponible = reader.GetBoolean(nameof(Inmueble.Disponible)),
+                            ImagenRuta = reader.IsDBNull(reader.GetOrdinal(nameof(Inmueble.ImagenRuta))) ? null : reader.GetString(nameof(Inmueble.ImagenRuta)),
                             PropietarioId = reader.GetInt32("propietario_Id"),
                             Propietario = new Propietario
                             {
@@ -256,7 +266,7 @@ public class RepositorioInmueble
         using (var conn = new MySqlConnection(connectionString))
         {
             var query = @"
-            SELECT i.Id, i.Direccion, i.Uso, i.Cantidad_ambientes, i.Coordenadas, i.Precio, i.Disponible, i.propietario_Id, p.nombre, p.Apellido, p.Telefono, t.Tipo
+            SELECT i.Id, i.Direccion, i.Uso, i.Cantidad_ambientes, i.Coordenadas, i.Precio, i.Disponible, i.ImagenRuta,i.propietario_Id, p.nombre, p.Apellido, p.Telefono, t.Tipo
             FROM inmuebles i
             INNER JOIN propietarios p ON i.propietario_id = p.Id
             INNER JOIN tipos_inmueble t ON i.tipo_inmueble_Id = t.Id
@@ -279,6 +289,7 @@ public class RepositorioInmueble
                             Coordenadas = reader.GetString(nameof(Inmueble.Coordenadas)),
                             Precio = reader.GetDecimal(nameof(Inmueble.Precio)),
                             Disponible = reader.GetBoolean(nameof(Inmueble.Disponible)),
+                            ImagenRuta = reader.IsDBNull(reader.GetOrdinal(nameof(Inmueble.ImagenRuta))) ? null : reader.GetString(nameof(Inmueble.ImagenRuta)),
                             PropietarioId = reader.GetInt32("propietario_Id"),
                             Propietario = new Propietario
                             {
@@ -303,19 +314,20 @@ public class RepositorioInmueble
         return list;
     }
 
-    public List<Inmueble> GetInmueblesPorFechas(DateTime fechaInicio, DateTime fechaFinal){
+    public List<Inmueble> GetInmueblesPorFechas(DateTime fechaInicio, DateTime fechaFinal)
+    {
         var list = new List<Inmueble>();
 
         using (var conn = new MySqlConnection(connectionString))
         {
 
-        /* se utiliza una subconsulta que busca los contratos que se superponen con las fechas del nuevo contrato. 
-        En esta subconsulta, se busca cualquier contrato que se solape con las fechas especificadas 
-        La subconsulta devuelve una lista de los ID de los inmuebles que están ocupados durante el período especificado. 
-        Luego, se utiliza la cláusula "NOT IN" para seleccionar todos los inmuebles que no estén en esa lista.*/
+            /* se utiliza una subconsulta que busca los contratos que se superponen con las fechas del nuevo contrato. 
+            En esta subconsulta, se busca cualquier contrato que se solape con las fechas especificadas 
+            La subconsulta devuelve una lista de los ID de los inmuebles que están ocupados durante el período especificado. 
+            Luego, se utiliza la cláusula "NOT IN" para seleccionar todos los inmuebles que no estén en esa lista.*/
 
             var query = @"
-            SELECT i.Id, i.Direccion, i.Uso, i.Cantidad_ambientes, i.Coordenadas, i.Precio, i.Disponible, i.propietario_Id, p.nombre, p.Apellido, p.Telefono, t.Tipo
+            SELECT i.Id, i.Direccion, i.Uso, i.Cantidad_ambientes, i.Coordenadas, i.Precio, i.Disponible, i.ImagenRuta,i.propietario_Id, p.nombre, p.Apellido, p.Telefono, t.Tipo
             FROM inmuebles i
             INNER JOIN propietarios p ON i.propietario_id = p.Id
             INNER JOIN tipos_inmueble t ON i.tipo_inmueble_Id = t.Id
@@ -331,7 +343,7 @@ public class RepositorioInmueble
             using (var command = new MySqlCommand(query, conn))
             {
                 command.Parameters.AddWithValue("@parametroDesde", fechaInicio);
-                command.Parameters.AddWithValue("@parametroHasta", fechaFinal); 
+                command.Parameters.AddWithValue("@parametroHasta", fechaFinal);
                 conn.Open();
                 using (var reader = command.ExecuteReader())
                 {
@@ -346,6 +358,7 @@ public class RepositorioInmueble
                             Coordenadas = reader.GetString(nameof(Inmueble.Coordenadas)),
                             Precio = reader.GetDecimal(nameof(Inmueble.Precio)),
                             Disponible = reader.GetBoolean(nameof(Inmueble.Disponible)),
+                            ImagenRuta = reader.IsDBNull(reader.GetOrdinal(nameof(Inmueble.ImagenRuta))) ? null : reader.GetString(nameof(Inmueble.ImagenRuta)),
                             PropietarioId = reader.GetInt32("propietario_Id"),
                             Propietario = new Propietario
                             {

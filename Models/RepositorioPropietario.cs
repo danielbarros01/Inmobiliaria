@@ -46,8 +46,8 @@ public class RepositorioPropietario : RepositorioBase, IRepositorioPropietario
         int res = 0;
         using (var conn = new MySqlConnection(connectionString))
         {
-            string query = @"INSERT INTO propietarios(Dni,Nombre,Apellido,Email, Telefono)
-                                VALUES(@dni,@nombre, @apellido, @Email, @telefono);
+            string query = @"INSERT INTO propietarios(Dni,Nombre,Apellido,Email, Telefono, Password)
+                                VALUES(@dni,@nombre, @apellido, @Email, @telefono, @password);
                                 SELECT LAST_INSERT_ID();";
             using (var command = new MySqlCommand(query, conn))
             {
@@ -56,6 +56,7 @@ public class RepositorioPropietario : RepositorioBase, IRepositorioPropietario
                 command.Parameters.AddWithValue("@apellido", p.Apellido);
                 command.Parameters.AddWithValue("@telefono", p.Telefono);
                 command.Parameters.AddWithValue("@email", p.Email);
+                command.Parameters.AddWithValue("@password", p.Password);
                 conn.Open();
                 res = Convert.ToInt32(command.ExecuteScalar()); // devuelve el valor de la última fila insertada en la tabla. Este valor se convierte a un entero y se asigna a la variable res.
                 p.Id = res;

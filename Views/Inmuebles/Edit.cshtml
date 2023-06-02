@@ -36,7 +36,7 @@
 </div>
 
 <div class="d-flex flex-md-row justify-content-center">
-    <form asp-action="Edit" class="col-md-8">
+    <form asp-action="Edit" class="col-md-8" enctype="multipart/form-data">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
         <div class="form-group">
@@ -101,9 +101,18 @@
             <span asp-validation-for="Propietario" class="text-danger"></span>
         </div>
 
+        <div class="form-group">
+                <label asp-for="ImagenFile" class="control-label">Imagen</label>
+                <br>
+                <img id="avatar-img" src="@Model.ImagenRuta" alt="Imagen" width="132">
+                <input type="file" class="custom-file-input" asp-for="ImagenFile" id="avatar-input" onchange="mostrarImagen()">
+                <span asp-validation-for="ImagenFile" class="text-danger"></span>
+        </div>
+
         <div class="form-group text-center">
             <input type="submit" value="Guardar" class="btn btn-primary" />
         </div>
     </form>
 </div>
 
+<script src="~/js/EditUser.js"></script>
